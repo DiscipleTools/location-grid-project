@@ -1,0 +1,7 @@
+/scripts/connect_params.json
+/scripts/output/*
+/vendor/*
+/scripts/vendor/*
+/scripts/previous/*
+/.idea/*
+*connect_params.json*
