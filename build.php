@@ -103,7 +103,7 @@ country_codes, and level descriptions.
 
 
 
-###The location_grid_geometry table 
+### The location_grid_geometry table 
 The location_grid_geometry table has all polygons for each of the 380,000 administrative units cross-referenced
 to the location_grid table by grid_id.
 
