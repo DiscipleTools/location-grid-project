@@ -18,7 +18,7 @@ $results = mysqli_fetch_all($results_object, MYSQLI_ASSOC);
 
 foreach ( $results as $row ) {
 
-    $json = shell_exec('mapbox --access-token='.$mapbox_key. ' geocoding \''.$row['address'].'\''  );
+    $json = shell_exec('mapbox --access-token='.$mapbox_key. ' geocode-api \''.$row['address'].'\''  );
     $json = json_decode( $json, true );
 
     $longitude = $json['features'][0]['center'][0];

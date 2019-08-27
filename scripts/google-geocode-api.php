@@ -61,7 +61,7 @@ if ( ! class_exists( 'Disciple_Tools_Google_Geocode_API' ) ) {
         }
 
         /**
-         * Google geocoding service
+         * Google geocode-api service
          * Supply a `physical address` or for reverse lookup supply `latitude,longitude`
          *
          * @param $address          string   Can be an address or a geolocation lat, lng
@@ -623,7 +623,7 @@ if ( ! class_exists( 'Disciple_Tools_Google_Geocode_API' ) ) {
  * intersection indicates a major intersection, usually of two major roads.
  * political indicates a political entity. Usually, this type indicates a polygon of some civil administration.
  * country indicates the national political entity, and is typically the highest order type returned by the Geocoder.
- * administrative_area_level_1 indicates a first-order civil entity below the country level. Within the United States, these administrative levels are states. Not all nations exhibit these administrative levels. In most cases, administrative_area_level_1 short names will closely match ISO 3166-2 subdivisions and other widely circulated lists; however this is not guaranteed as our geocoding results are based on a variety of signals and location data.
+ * administrative_area_level_1 indicates a first-order civil entity below the country level. Within the United States, these administrative levels are states. Not all nations exhibit these administrative levels. In most cases, administrative_area_level_1 short names will closely match ISO 3166-2 subdivisions and other widely circulated lists; however this is not guaranteed as our geocode-api results are based on a variety of signals and location data.
  * administrative_area_level_2 indicates a second-order civil entity below the country level. Within the United States, these administrative levels are counties. Not all nations exhibit these administrative levels.
  * administrative_area_level_3 indicates a third-order civil entity below the country level. This type indicates a minor civil division. Not all nations exhibit these administrative levels.
  * administrative_area_level_4 indicates a fourth-order civil entity below the country level. This type indicates a minor civil division. Not all nations exhibit these administrative levels.
