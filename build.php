@@ -312,7 +312,7 @@ $content .= '
 ';
 
 foreach ( $break_down as $value ) {
-    if ( $value['name'] === 'world') {
+    if ( $value['level_name'] === 'world') {
         continue;
     }
     $content .= '|' . $value['name'] .'|' . $value['admin0_code'] .'|' . $value['level_name'] .'|' . $value['count'] .'|' . '['.strtolower( $value['admin0_code'] ).'_'.strtolower( $value['level_name'] ) .'.geojson](https://storage.googleapis.com/location-grid-gis-layers/'.strtolower( $value['admin0_code'] ).'_'.strtolower( $value['level_name'] ) .'.geojson) |'  . PHP_EOL;

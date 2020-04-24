@@ -926,7 +926,6 @@ CREATE TABLE `location_grid_geometry` (
 
 | Name | Admin0 Code | Level Name | Number of Polygons | GIS Layer Link |
 | ---- | ---- | ---- | ---- | ---- |
-|||world|1|[_world.geojson](https://storage.googleapis.com/location-grid-gis-layers/_world.geojson) |
 |Aruba|ABW|admin0|1|[abw_admin0.geojson](https://storage.googleapis.com/location-grid-gis-layers/abw_admin0.geojson) |
 |Afghanistan|AFG|admin0|1|[afg_admin0.geojson](https://storage.googleapis.com/location-grid-gis-layers/afg_admin0.geojson) |
 |Afghanistan|AFG|admin1|34|[afg_admin1.geojson](https://storage.googleapis.com/location-grid-gis-layers/afg_admin1.geojson) |
