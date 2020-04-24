@@ -6,6 +6,7 @@ ini_set('memory_limit', '50000M');
 // define table names
 $tables = [
     'grid' => 'location_grid',
+    'geometry' => 'location_grid_geometry',
 ];
 
 
