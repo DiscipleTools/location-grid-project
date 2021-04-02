@@ -348,8 +348,8 @@ foreach( $admin2 as $result ) {
     $box = $polygon->getBBox();
     $nla = $box['maxy'];
     $sla = $box['miny'];
-    $wlo = $box['maxx'];
-    $elo = $box['minx'];
+    $elo = $box['maxx'];
+    $wlo = $box['minx'];
 
     $centroid = $polygon->centroid();
     $lng = $centroid->coords[0];
@@ -359,8 +359,8 @@ foreach( $admin2 as $result ) {
     $update = mysqli_query( $con, "UPDATE {$table} SET
         north_latitude={$nla},
         south_latitude={$sla},
-        west_longitude={$wlo},
         east_longitude={$elo},
+        west_longitude={$wlo},
         latitude={$lat},
         longitude={$lng}
         WHERE grid_id = {$grid_id};");
