@@ -2,11 +2,6 @@
 // Simplify polygons with mapshaper
 // @link https://github.com/mbloch/mapshaper
 
-/**
- * $ php simplify-polygons.php 0.1
- * the argument is the percent of reduction
- */
-
 print date('H:i:s') . ' | Start ' . PHP_EOL;
 
 $target_directory = getcwd() . '/output/'; // polygons single

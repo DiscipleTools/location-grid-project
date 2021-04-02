@@ -1,7 +1,8 @@
-/scripts/connect_params.json
-/scripts/output/*
-/vendor/*
-/scripts/vendor/*
-/scripts/previous/*
+*/vendor/*
+*/previous/*
 /.idea/*
-*connect_params.json*
+*/output
+*.zip
+*.geojson
+*.json
+*.csv
