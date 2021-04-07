@@ -26,10 +26,14 @@ $query_raw = mysqli_query( $con,
     "
     SELECT  lg0.grid_id
     FROM location_grid lg0
+LEFT JOIN location_grid as a0 ON lg0.admin0_grid_id=a0.grid_id
     WHERE lg0.level < 1
     AND lg0.country_code NOT IN (
         SELECT lg23.country_code FROM location_grid lg23 WHERE lg23.level_name = 'admin1' GROUP BY lg23.country_code
     )
+AND a0.name NOT IN ('China', 'India', 'France', 'Spain', 'Pakistan', 'Bangladesh')
+    AND a0.name NOT IN ('Romania', 'Estonia', 'Bhutan', 'Croatia', 'Solomon Islands', 'Guyana', 'Iceland', 'Vanuatu', 'Cape Verde', 'Samoa', 'Faroe Islands', 'Norway', 'Uruguay', 'Mongolia', 'United Arab Emirates', 'Slovenia', 'Bulgaria', 'Honduras', 'Columbia', 'Namibia', 'Switzerland', 'Guatemala')
+
     
     UNION ALL
     -- 
@@ -37,9 +41,12 @@ $query_raw = mysqli_query( $con,
     -- 
     SELECT  lg1.grid_id
     FROM location_grid as lg1 
+LEFT JOIN location_grid as a0 ON lg1.admin0_grid_id=a0.grid_id
     WHERE lg1.country_code NOT IN (
     SELECT lg22.country_code FROM location_grid lg22 WHERE lg22.level_name = 'admin2' GROUP BY lg22.country_code
     ) AND lg1.level_name != 'admin0'
+AND a0.name NOT IN ('China', 'India', 'France', 'Spain', 'Pakistan', 'Bangladesh')
+    AND a0.name NOT IN ('Romania', 'Estonia', 'Bhutan', 'Croatia', 'Solomon Islands', 'Guyana', 'Iceland', 'Vanuatu', 'Cape Verde', 'Samoa', 'Faroe Islands', 'Norway', 'Uruguay', 'Mongolia', 'United Arab Emirates', 'Slovenia', 'Bulgaria', 'Honduras', 'Columbia', 'Namibia', 'Switzerland', 'Guatemala')
     
     UNION ALL
     -- 
@@ -47,7 +54,27 @@ $query_raw = mysqli_query( $con,
     -- 
     SELECT  lg2.grid_id
     FROM location_grid lg2 
-    WHERE lg2.level_name = 'admin2';
+LEFT JOIN location_grid as a0 ON lg2.admin0_grid_id=a0.grid_id
+    WHERE lg2.level_name = 'admin2'
+AND a0.name NOT IN ('China', 'India', 'France', 'Spain', 'Pakistan', 'Bangladesh')
+    AND a0.name NOT IN ('Romania', 'Estonia', 'Bhutan', 'Croatia', 'Solomon Islands', 'Guyana', 'Iceland', 'Vanuatu', 'Cape Verde', 'Samoa', 'Faroe Islands', 'Norway', 'Uruguay', 'Mongolia', 'United Arab Emirates', 'Slovenia', 'Bulgaria', 'Honduras', 'Columbia', 'Namibia', 'Switzerland', 'Guatemala')
+
+
+UNION ALL
+
+    SELECT  lg3.grid_id
+    FROM location_grid as lg3 
+	LEFT JOIN location_grid as a0 ON lg3.admin0_grid_id=a0.grid_id
+		WHERE lg3.level = 3
+AND a0.name IN ('China', 'India', 'France', 'Spain', 'Pakistan', 'Bangladesh')
+
+UNION ALL
+
+    SELECT  lg3.grid_id
+    FROM location_grid as lg3 
+	LEFT JOIN location_grid as a0 ON lg3.admin0_grid_id=a0.grid_id
+		WHERE lg3.level = 1
+AND a0.name IN ('Romania', 'Estonia', 'Bhutan', 'Croatia', 'Solomon Islands', 'Guyana', 'Iceland', 'Vanuatu', 'Cape Verde', 'Samoa', 'Faroe Islands', 'Norway', 'Uruguay', 'Mongolia', 'United Arab Emirates', 'Slovenia', 'Bulgaria', 'Honduras', 'Columbia', 'Namibia', 'Switzerland', 'Guatemala')
     " );
 if ( empty( $query_raw ) ) {
     print_r( $con );
