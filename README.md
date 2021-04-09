@@ -116,8 +116,8 @@ CREATE TABLE `location_grid` (
   `latitude` float DEFAULT NULL,
   `north_latitude` float DEFAULT NULL,
   `south_latitude` float DEFAULT NULL,
-  `west_longitude` float DEFAULT NULL,
   `east_longitude` float DEFAULT NULL,
+  `west_longitude` float DEFAULT NULL,
   `population` bigint(20) NOT NULL DEFAULT '0',
   `modification_date` date DEFAULT NULL,
   `geonames_ref` bigint(20) DEFAULT NULL,
@@ -131,13 +131,13 @@ CREATE TABLE `location_grid` (
   KEY `admin2_code` (`admin2_code`),
   KEY `admin3_code` (`admin3_code`),
   KEY `admin4_code` (`admin4_code`),
+  KEY `admin5_code` (`admin5_code`),
   KEY `country_code` (`country_code`),
   KEY `north_latitude` (`north_latitude`),
   KEY `south_latitude` (`south_latitude`),
   KEY `parent_id` (`parent_id`),
-  KEY `west_longitude` (`west_longitude`),
   KEY `east_longitude` (`east_longitude`),
-  KEY `admin5_code` (`admin5_code`),
+  KEY `west_longitude` (`west_longitude`),
   KEY `admin0_grid_id` (`admin0_grid_id`),
   KEY `admin1_grid_id` (`admin1_grid_id`),
   KEY `admin2_grid_id` (`admin2_grid_id`),
@@ -197,7 +197,6 @@ CREATE TABLE `location_grid_geometry` (
 |American Samoa|ASM|admin1|4|
 |American Samoa|ASM|admin2|16|
 |American Samoa|ASM|admin3|74|
-|Antarctica|ATA|admin0|1|
 |French Southern Territories|ATF|admin0|1|
 |French Southern Territories|ATF|admin1|4|
 |Antigua and Barbuda|ATG|admin0|1|
@@ -363,7 +362,10 @@ CREATE TABLE `location_grid_geometry` (
 |Eritrea|ERI|admin1|6|
 |Eritrea|ERI|admin2|50|
 |Western Sahara|ESH|admin0|1|
-|Western Sahara|ESH|admin1|4|
+|Western Sahara|ESH|admin1|5|
+|Western Sahara|ESH|admin2|1|
+|Western Sahara|ESH|admin3|1|
+|Western Sahara|ESH|admin4|2|
 |Spain|ESP|admin0|1|
 |Spain|ESP|admin1|18|
 |Spain|ESP|admin2|52|
@@ -566,10 +568,10 @@ CREATE TABLE `location_grid_geometry` (
 |Macao|MAC|admin2|8|
 |Saint-Martin|MAF|admin0|1|
 |Morocco|MAR|admin0|1|
-|Morocco|MAR|admin1|15|
-|Morocco|MAR|admin2|54|
-|Morocco|MAR|admin3|399|
-|Morocco|MAR|admin4|1515|
+|Morocco|MAR|admin1|10|
+|Morocco|MAR|admin2|69|
+|Morocco|MAR|admin3|398|
+|Morocco|MAR|admin4|1513|
 |Monaco|MCO|admin0|1|
 |Moldova|MDA|admin0|1|
 |Moldova|MDA|admin1|37|
@@ -581,7 +583,7 @@ CREATE TABLE `location_grid_geometry` (
 |Maldives|MDV|admin0|1|
 |Mexico|MEX|admin0|1|
 |Mexico|MEX|admin1|32|
-|Mexico|MEX|admin2|1854|
+|Mexico|MEX|admin2|1856|
 |Marshall Islands|MHL|admin0|1|
 |Macedonia|MKD|admin0|1|
 |Macedonia|MKD|admin1|85|
@@ -912,9 +914,9 @@ CREATE TABLE `location_grid_geometry` (
 
 | Level Name | Number of Records |
 | ---- | ---- | 
-|admin0|256|
-|admin1|3610|
-|admin2|45962|
+|admin0|255|
+|admin1|3606|
+|admin2|45980|
 |admin3|147427|
 |admin4|138053|
 |admin5|51427|
@@ -956,7 +958,6 @@ CREATE TABLE `location_grid_geometry` (
 |American Samoa|ASM|admin1|4|[asm_admin1.geojson](https://storage.googleapis.com/location-grid-gis-layers/asm_admin1.geojson) |
 |American Samoa|ASM|admin2|16|[asm_admin2.geojson](https://storage.googleapis.com/location-grid-gis-layers/asm_admin2.geojson) |
 |American Samoa|ASM|admin3|74|[asm_admin3.geojson](https://storage.googleapis.com/location-grid-gis-layers/asm_admin3.geojson) |
-|Antarctica|ATA|admin0|1|[ata_admin0.geojson](https://storage.googleapis.com/location-grid-gis-layers/ata_admin0.geojson) |
 |French Southern Territories|ATF|admin0|1|[atf_admin0.geojson](https://storage.googleapis.com/location-grid-gis-layers/atf_admin0.geojson) |
 |French Southern Territories|ATF|admin1|4|[atf_admin1.geojson](https://storage.googleapis.com/location-grid-gis-layers/atf_admin1.geojson) |
 |Antigua and Barbuda|ATG|admin0|1|[atg_admin0.geojson](https://storage.googleapis.com/location-grid-gis-layers/atg_admin0.geojson) |
@@ -1122,7 +1123,10 @@ CREATE TABLE `location_grid_geometry` (
 |Eritrea|ERI|admin1|6|[eri_admin1.geojson](https://storage.googleapis.com/location-grid-gis-layers/eri_admin1.geojson) |
 |Eritrea|ERI|admin2|50|[eri_admin2.geojson](https://storage.googleapis.com/location-grid-gis-layers/eri_admin2.geojson) |
 |Western Sahara|ESH|admin0|1|[esh_admin0.geojson](https://storage.googleapis.com/location-grid-gis-layers/esh_admin0.geojson) |
-|Western Sahara|ESH|admin1|4|[esh_admin1.geojson](https://storage.googleapis.com/location-grid-gis-layers/esh_admin1.geojson) |
+|Western Sahara|ESH|admin1|5|[esh_admin1.geojson](https://storage.googleapis.com/location-grid-gis-layers/esh_admin1.geojson) |
+|Western Sahara|ESH|admin2|1|[esh_admin2.geojson](https://storage.googleapis.com/location-grid-gis-layers/esh_admin2.geojson) |
+|Western Sahara|ESH|admin3|1|[esh_admin3.geojson](https://storage.googleapis.com/location-grid-gis-layers/esh_admin3.geojson) |
+|Western Sahara|ESH|admin4|2|[esh_admin4.geojson](https://storage.googleapis.com/location-grid-gis-layers/esh_admin4.geojson) |
 |Spain|ESP|admin0|1|[esp_admin0.geojson](https://storage.googleapis.com/location-grid-gis-layers/esp_admin0.geojson) |
 |Spain|ESP|admin1|18|[esp_admin1.geojson](https://storage.googleapis.com/location-grid-gis-layers/esp_admin1.geojson) |
 |Spain|ESP|admin2|52|[esp_admin2.geojson](https://storage.googleapis.com/location-grid-gis-layers/esp_admin2.geojson) |
@@ -1325,10 +1329,10 @@ CREATE TABLE `location_grid_geometry` (
 |Macao|MAC|admin2|8|[mac_admin2.geojson](https://storage.googleapis.com/location-grid-gis-layers/mac_admin2.geojson) |
 |Saint-Martin|MAF|admin0|1|[maf_admin0.geojson](https://storage.googleapis.com/location-grid-gis-layers/maf_admin0.geojson) |
 |Morocco|MAR|admin0|1|[mar_admin0.geojson](https://storage.googleapis.com/location-grid-gis-layers/mar_admin0.geojson) |
-|Morocco|MAR|admin1|15|[mar_admin1.geojson](https://storage.googleapis.com/location-grid-gis-layers/mar_admin1.geojson) |
-|Morocco|MAR|admin2|54|[mar_admin2.geojson](https://storage.googleapis.com/location-grid-gis-layers/mar_admin2.geojson) |
-|Morocco|MAR|admin3|399|[mar_admin3.geojson](https://storage.googleapis.com/location-grid-gis-layers/mar_admin3.geojson) |
-|Morocco|MAR|admin4|1515|[mar_admin4.geojson](https://storage.googleapis.com/location-grid-gis-layers/mar_admin4.geojson) |
+|Morocco|MAR|admin1|10|[mar_admin1.geojson](https://storage.googleapis.com/location-grid-gis-layers/mar_admin1.geojson) |
+|Morocco|MAR|admin2|69|[mar_admin2.geojson](https://storage.googleapis.com/location-grid-gis-layers/mar_admin2.geojson) |
+|Morocco|MAR|admin3|398|[mar_admin3.geojson](https://storage.googleapis.com/location-grid-gis-layers/mar_admin3.geojson) |
+|Morocco|MAR|admin4|1513|[mar_admin4.geojson](https://storage.googleapis.com/location-grid-gis-layers/mar_admin4.geojson) |
 |Monaco|MCO|admin0|1|[mco_admin0.geojson](https://storage.googleapis.com/location-grid-gis-layers/mco_admin0.geojson) |
 |Moldova|MDA|admin0|1|[mda_admin0.geojson](https://storage.googleapis.com/location-grid-gis-layers/mda_admin0.geojson) |
 |Moldova|MDA|admin1|37|[mda_admin1.geojson](https://storage.googleapis.com/location-grid-gis-layers/mda_admin1.geojson) |
@@ -1340,7 +1344,7 @@ CREATE TABLE `location_grid_geometry` (
 |Maldives|MDV|admin0|1|[mdv_admin0.geojson](https://storage.googleapis.com/location-grid-gis-layers/mdv_admin0.geojson) |
 |Mexico|MEX|admin0|1|[mex_admin0.geojson](https://storage.googleapis.com/location-grid-gis-layers/mex_admin0.geojson) |
 |Mexico|MEX|admin1|32|[mex_admin1.geojson](https://storage.googleapis.com/location-grid-gis-layers/mex_admin1.geojson) |
-|Mexico|MEX|admin2|1854|[mex_admin2.geojson](https://storage.googleapis.com/location-grid-gis-layers/mex_admin2.geojson) |
+|Mexico|MEX|admin2|1856|[mex_admin2.geojson](https://storage.googleapis.com/location-grid-gis-layers/mex_admin2.geojson) |
 |Marshall Islands|MHL|admin0|1|[mhl_admin0.geojson](https://storage.googleapis.com/location-grid-gis-layers/mhl_admin0.geojson) |
 |Macedonia|MKD|admin0|1|[mkd_admin0.geojson](https://storage.googleapis.com/location-grid-gis-layers/mkd_admin0.geojson) |
 |Macedonia|MKD|admin1|85|[mkd_admin1.geojson](https://storage.googleapis.com/location-grid-gis-layers/mkd_admin1.geojson) |
@@ -1673,7 +1677,7 @@ CREATE TABLE `location_grid_geometry` (
 ### ADMIN0
 These countries have `admin0` level records and polygons:
 
-Aruba, Afghanistan, Angola, Anguilla, Åland, Albania, Andorra, United Arab Emirates, Argentina, Armenia, American Samoa, Antarctica, French Southern Territories, Antigua and Barbuda, Australia, Austria, Azerbaijan, Burundi, Belgium, Benin, Bonaire, Sint Eustatius and Saba, Burkina Faso, Bangladesh, Bulgaria, Bahrain, Bahamas, Bosnia and Herzegovina, Saint-Barthélemy, Belarus, Belize, Bermuda, Bolivia, Brazil, Barbados, Brunei, Bhutan, Bouvet Island, Botswana, Central African Republic, Canada, Cocos Islands, Switzerland, Chile, China, Côte d'Ivoire, Cameroon, Democratic Republic of the Congo, Republic of Congo, Cook Islands, Colombia, Comoros, Cape Verde, Costa Rica, Cuba, Curaçao, Christmas Island, Cayman Islands, Cyprus, Czech Republic, Germany, Djibouti, Dominica, Denmark, Dominican Republic, Algeria, Ecuador, Egypt, Eritrea, Western Sahara, Spain, Estonia, Ethiopia, Finland, Fiji, Falkland Islands, France, Faroe Islands, Micronesia, Gabon, United Kingdom, Georgia, Guernsey, Ghana, Gibraltar, Guinea, Guadeloupe, Gambia, Guinea-Bissau, Equatorial Guinea, Greece, Grenada, Greenland, Guatemala, French Guiana, Guam, Guyana, Hong Kong, Heard Island and McDonald Islands, Honduras, Croatia, Haiti, Hungary, Indonesia, Isle of Man, India, British Indian Ocean Territory, Ireland, Iran, Iraq, Iceland, Israel, Italy, Jamaica, Jersey, Jordan, Japan, Kazakhstan, Kenya, Kyrgyzstan, Cambodia, Kiribati, Saint Kitts and Nevis, South Korea, Kuwait, Laos, Lebanon, Liberia, Libya, Saint Lucia, Liechtenstein, Sri Lanka, Lesotho, Lithuania, Luxembourg, Latvia, Macao, Saint-Martin, Morocco, Monaco, Moldova, Madagascar, Maldives, Mexico, Marshall Islands, Macedonia, Mali, Malta, Myanmar, Montenegro, Mongolia, Northern Mariana Islands, Mozambique, Mauritania, Montserrat, Martinique, Mauritius, Malawi, Malaysia, Mayotte, Namibia, New Caledonia, Niger, Norfolk Island, Nigeria, Nicaragua, Niue, Netherlands, Norway, Nepal, Nauru, New Zealand, Oman, Pakistan, Panama, Pitcairn Islands, Peru, Philippines, Palau, Papua New Guinea, Poland, Puerto Rico, North Korea, Portugal, Paraguay, Palestina, French Polynesia, Qatar, Reunion, Romania, Russia, Rwanda, Saudi Arabia, Sudan, Senegal, Singapore, South Georgia and the South Sandwich Islands, Saint Helena, Svalbard and Jan Mayen, Solomon Islands, Sierra Leone, El Salvador, San Marino, Somalia, Saint Pierre and Miquelon, Serbia, South Sudan, São Tomé and Príncipe, Suriname, Slovakia, Slovenia, Sweden, Swaziland, Sint Maarten, Seychelles, Syria, Turks and Caicos Islands, Chad, Togo, Thailand, Tajikistan, Tokelau, Turkmenistan, Timor-Leste, Tonga, Trinidad and Tobago, Tunisia, Turkey, Tuvalu, Taiwan, Tanzania, Uganda, Ukraine, United States Minor Outlying Islands, Uruguay, United States, Uzbekistan, Vatican City, Saint Vincent and the Grenadines, Venezuela, British Virgin Islands, Virgin Islands, U.S., Vietnam, Vanuatu, Wallis and Futuna, Samoa, Akrotiri and Dhekelia, Caspian Sea, Clipperton Island, Kosovo, Northern Cyprus, Paracel Islands, Spratly Islands, Yemen, South Africa, Zambia, Zimbabwe
+Aruba, Afghanistan, Angola, Anguilla, Åland, Albania, Andorra, United Arab Emirates, Argentina, Armenia, American Samoa, French Southern Territories, Antigua and Barbuda, Australia, Austria, Azerbaijan, Burundi, Belgium, Benin, Bonaire, Sint Eustatius and Saba, Burkina Faso, Bangladesh, Bulgaria, Bahrain, Bahamas, Bosnia and Herzegovina, Saint-Barthélemy, Belarus, Belize, Bermuda, Bolivia, Brazil, Barbados, Brunei, Bhutan, Bouvet Island, Botswana, Central African Republic, Canada, Cocos Islands, Switzerland, Chile, China, Côte d'Ivoire, Cameroon, Democratic Republic of the Congo, Republic of Congo, Cook Islands, Colombia, Comoros, Cape Verde, Costa Rica, Cuba, Curaçao, Christmas Island, Cayman Islands, Cyprus, Czech Republic, Germany, Djibouti, Dominica, Denmark, Dominican Republic, Algeria, Ecuador, Egypt, Eritrea, Western Sahara, Spain, Estonia, Ethiopia, Finland, Fiji, Falkland Islands, France, Faroe Islands, Micronesia, Gabon, United Kingdom, Georgia, Guernsey, Ghana, Gibraltar, Guinea, Guadeloupe, Gambia, Guinea-Bissau, Equatorial Guinea, Greece, Grenada, Greenland, Guatemala, French Guiana, Guam, Guyana, Hong Kong, Heard Island and McDonald Islands, Honduras, Croatia, Haiti, Hungary, Indonesia, Isle of Man, India, British Indian Ocean Territory, Ireland, Iran, Iraq, Iceland, Israel, Italy, Jamaica, Jersey, Jordan, Japan, Kazakhstan, Kenya, Kyrgyzstan, Cambodia, Kiribati, Saint Kitts and Nevis, South Korea, Kuwait, Laos, Lebanon, Liberia, Libya, Saint Lucia, Liechtenstein, Sri Lanka, Lesotho, Lithuania, Luxembourg, Latvia, Macao, Saint-Martin, Morocco, Monaco, Moldova, Madagascar, Maldives, Mexico, Marshall Islands, Macedonia, Mali, Malta, Myanmar, Montenegro, Mongolia, Northern Mariana Islands, Mozambique, Mauritania, Montserrat, Martinique, Mauritius, Malawi, Malaysia, Mayotte, Namibia, New Caledonia, Niger, Norfolk Island, Nigeria, Nicaragua, Niue, Netherlands, Norway, Nepal, Nauru, New Zealand, Oman, Pakistan, Panama, Pitcairn Islands, Peru, Philippines, Palau, Papua New Guinea, Poland, Puerto Rico, North Korea, Portugal, Paraguay, Palestina, French Polynesia, Qatar, Reunion, Romania, Russia, Rwanda, Saudi Arabia, Sudan, Senegal, Singapore, South Georgia and the South Sandwich Islands, Saint Helena, Svalbard and Jan Mayen, Solomon Islands, Sierra Leone, El Salvador, San Marino, Somalia, Saint Pierre and Miquelon, Serbia, South Sudan, São Tomé and Príncipe, Suriname, Slovakia, Slovenia, Sweden, Swaziland, Sint Maarten, Seychelles, Syria, Turks and Caicos Islands, Chad, Togo, Thailand, Tajikistan, Tokelau, Turkmenistan, Timor-Leste, Tonga, Trinidad and Tobago, Tunisia, Turkey, Tuvalu, Taiwan, Tanzania, Uganda, Ukraine, United States Minor Outlying Islands, Uruguay, United States, Uzbekistan, Vatican City, Saint Vincent and the Grenadines, Venezuela, British Virgin Islands, Virgin Islands, U.S., Vietnam, Vanuatu, Wallis and Futuna, Samoa, Akrotiri and Dhekelia, Caspian Sea, Clipperton Island, Kosovo, Northern Cyprus, Paracel Islands, Spratly Islands, Yemen, South Africa, Zambia, Zimbabwe
 
 -----
 
@@ -1691,7 +1695,7 @@ Afghanistan, Angola, Åland, Albania, Andorra, United Arab Emirates, Argentina, 
 ### ADMIN2
 These countries have `admin2` level records and polygons:
 
-Afghanistan, Angola, Albania, United Arab Emirates, Argentina, American Samoa, Australia, Austria, Azerbaijan, Burundi, Belgium, Benin, Burkina Faso, Bangladesh, Bulgaria, Bosnia and Herzegovina, Belarus, Bolivia, Brazil, Brunei, Bhutan, Botswana, Central African Republic, Canada, Switzerland, Chile, China, Côte d'Ivoire, Cameroon, Democratic Republic of the Congo, Republic of Congo, Colombia, Costa Rica, Cuba, Czech Republic, Germany, Djibouti, Denmark, Dominican Republic, Algeria, Ecuador, Egypt, Eritrea, Spain, Estonia, Ethiopia, Finland, Fiji, France, Faroe Islands, Gabon, United Kingdom, Georgia, Ghana, Guinea, Guadeloupe, Gambia, Guinea-Bissau, Equatorial Guinea, Greece, Guatemala, French Guiana, Guyana, Honduras, Croatia, Haiti, Hungary, Indonesia, Isle of Man, India, Iran, Iraq, Iceland, Italy, Jordan, Japan, Kazakhstan, Kenya, Kyrgyzstan, Cambodia, South Korea, Laos, Lebanon, Liberia, Sri Lanka, Lithuania, Luxembourg, Latvia, Macao, Morocco, Madagascar, Mexico, Mali, Malta, Myanmar, Mongolia, Mozambique, Mauritania, Martinique, Malawi, Malaysia, Namibia, New Caledonia, Niger, Nigeria, Nicaragua, Netherlands, Norway, Nepal, New Zealand, Oman, Pakistan, Panama, Peru, Philippines, Papua New Guinea, Poland, North Korea, Portugal, Paraguay, Palestina, Reunion, Romania, Russia, Rwanda, Sudan, Senegal, Saint Helena, Solomon Islands, Sierra Leone, El Salvador, Somalia, Serbia, South Sudan, São Tomé and Príncipe, Suriname, Slovakia, Slovenia, Sweden, Swaziland, Syria, Chad, Togo, Thailand, Tajikistan, Timor-Leste, Tunisia, Turkey, Taiwan, Tanzania, Uganda, Ukraine, Uruguay, United States, Uzbekistan, Venezuela, Virgin Islands, U.S., Vietnam, Vanuatu, Wallis and Futuna, Samoa, Kosovo, Yemen, South Africa, Zambia, Zimbabwe
+Afghanistan, Angola, Albania, United Arab Emirates, Argentina, American Samoa, Australia, Austria, Azerbaijan, Burundi, Belgium, Benin, Burkina Faso, Bangladesh, Bulgaria, Bosnia and Herzegovina, Belarus, Bolivia, Brazil, Brunei, Bhutan, Botswana, Central African Republic, Canada, Switzerland, Chile, China, Côte d'Ivoire, Cameroon, Democratic Republic of the Congo, Republic of Congo, Colombia, Costa Rica, Cuba, Czech Republic, Germany, Djibouti, Denmark, Dominican Republic, Algeria, Ecuador, Egypt, Eritrea, Western Sahara, Spain, Estonia, Ethiopia, Finland, Fiji, France, Faroe Islands, Gabon, United Kingdom, Georgia, Ghana, Guinea, Guadeloupe, Gambia, Guinea-Bissau, Equatorial Guinea, Greece, Guatemala, French Guiana, Guyana, Honduras, Croatia, Haiti, Hungary, Indonesia, Isle of Man, India, Iran, Iraq, Iceland, Italy, Jordan, Japan, Kazakhstan, Kenya, Kyrgyzstan, Cambodia, South Korea, Laos, Lebanon, Liberia, Sri Lanka, Lithuania, Luxembourg, Latvia, Macao, Morocco, Madagascar, Mexico, Mali, Malta, Myanmar, Mongolia, Mozambique, Mauritania, Martinique, Malawi, Malaysia, Namibia, New Caledonia, Niger, Nigeria, Nicaragua, Netherlands, Norway, Nepal, New Zealand, Oman, Pakistan, Panama, Peru, Philippines, Papua New Guinea, Poland, North Korea, Portugal, Paraguay, Palestina, Reunion, Romania, Russia, Rwanda, Sudan, Senegal, Saint Helena, Solomon Islands, Sierra Leone, El Salvador, Somalia, Serbia, South Sudan, São Tomé and Príncipe, Suriname, Slovakia, Slovenia, Sweden, Swaziland, Syria, Chad, Togo, Thailand, Tajikistan, Timor-Leste, Tunisia, Turkey, Taiwan, Tanzania, Uganda, Ukraine, Uruguay, United States, Uzbekistan, Venezuela, Virgin Islands, U.S., Vietnam, Vanuatu, Wallis and Futuna, Samoa, Kosovo, Yemen, South Africa, Zambia, Zimbabwe
 
 -----
 
@@ -1700,7 +1704,7 @@ Afghanistan, Angola, Albania, United Arab Emirates, Argentina, American Samoa, A
 ### ADMIN3
 These countries have `admin3` level records and polygons:
 
-Angola, Albania, United Arab Emirates, American Samoa, Austria, Burundi, Belgium, Burkina Faso, Bangladesh, Bosnia and Herzegovina, Bolivia, Brazil, Canada, Switzerland, Chile, China, Côte d'Ivoire, Cameroon, Germany, Ecuador, Spain, Estonia, Ethiopia, Finland, France, United Kingdom, Guinea, Greece, Haiti, Indonesia, India, Italy, Kenya, Cambodia, Lebanon, Liberia, Luxembourg, Morocco, Madagascar, Mali, Myanmar, Mozambique, Malawi, Niger, Nepal, Pakistan, Panama, Peru, Philippines, Poland, Portugal, Russia, Rwanda, Sudan, Senegal, Sierra Leone, South Sudan, Chad, Thailand, Tajikistan, Timor-Leste, Tanzania, Uganda, Vietnam, South Africa
+Angola, Albania, United Arab Emirates, American Samoa, Austria, Burundi, Belgium, Burkina Faso, Bangladesh, Bosnia and Herzegovina, Bolivia, Brazil, Canada, Switzerland, Chile, China, Côte d'Ivoire, Cameroon, Germany, Ecuador, Western Sahara, Spain, Estonia, Ethiopia, Finland, France, United Kingdom, Guinea, Greece, Haiti, Indonesia, India, Italy, Kenya, Cambodia, Lebanon, Liberia, Luxembourg, Morocco, Madagascar, Mali, Myanmar, Mozambique, Malawi, Niger, Nepal, Pakistan, Panama, Peru, Philippines, Poland, Portugal, Russia, Rwanda, Sudan, Senegal, Sierra Leone, South Sudan, Chad, Thailand, Tajikistan, Timor-Leste, Tanzania, Uganda, Vietnam, South Africa
 
 -----
 
@@ -1709,7 +1713,7 @@ Angola, Albania, United Arab Emirates, American Samoa, Austria, Burundi, Belgium
 ### ADMIN4
 These countries have `admin4` level records and polygons:
 
-Burundi, Belgium, Bangladesh, Côte d'Ivoire, Germany, Spain, Finland, France, Haiti, Indonesia, Cambodia, Luxembourg, Morocco, Madagascar, Mali, Nepal, Rwanda, Senegal, Uganda, South Africa
+Burundi, Belgium, Bangladesh, Côte d'Ivoire, Germany, Western Sahara, Spain, Finland, France, Haiti, Indonesia, Cambodia, Luxembourg, Morocco, Madagascar, Mali, Nepal, Rwanda, Senegal, Uganda, South Africa
 
 -----
 

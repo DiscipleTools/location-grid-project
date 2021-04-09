@@ -20,8 +20,8 @@ if ( ! class_exists( 'Location_Grid_Geocoder' ) ) {
 
         public function __construct() {
             $this->geojson         = [];
-            $this->geometry_folder = '/Users/chris/Documents/Projects/location-grid-mirror/high/';
-            $this->mirror_source = '/Users/chris/Documents/Projects/location-grid-mirror/';
+            $this->geometry_folder = '/Users/chris/Documents/Projects/location-grid-mirror-v2/location-grid-mirror/high/';
+            $this->mirror_source = '/Users/chris/Documents/Projects/location-grid-mirror-v2/location-grid-mirror/';
 
             $params    = json_decode( file_get_contents( "connect_params.json" ), true );
             $this->con = mysqli_connect( $params[ 'host' ], $params[ 'username' ], $params[ 'password' ], $params[ 'database' ] );

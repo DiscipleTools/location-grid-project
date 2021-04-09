@@ -3,12 +3,12 @@ print 'Start' . PHP_EOL;
 
 require_once( 'con.php' );
 
-$table = 'morocco_import';
+$table = 'morocco';
 include_once( '../vendor/phayes/geophp/geoPHP.inc' ); // make sure to run $ composer install on the command line
 
 
 $query  = mysqli_query( $con, "
-            SELECT * FROM morocco_import" );
+            SELECT * FROM {$table}" );
 $results = mysqli_fetch_all( $query, MYSQLI_ASSOC );
 
 foreach( $results as $result ) {
@@ -54,13 +54,14 @@ foreach( $results as $result ) {
             longitude = {$centroid->coords[0]},
             latitude = {$centroid->coords[1]},
             north_latitude = {$bounds['maxy']},
-            south_latitude = {$bounds['minx']},
+            south_latitude = {$bounds['miny']},
             east_longitude = {$bounds['maxx']},
             west_longitude = {$bounds['minx']}
-        WHERE id = {$result['id']}
+        WHERE grid_id = {$result['grid_id']}
         " );
 
+    print '#';
 }
 
 mysqli_close($con);
-print 'End' . PHP_EOL;
+print PHP_EOL . 'End' . PHP_EOL;

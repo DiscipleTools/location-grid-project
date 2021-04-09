@@ -7,6 +7,9 @@ require_once( 'con.php' );
 print 'BEGIN' . PHP_EOL;
 include_once( '../vendor/phayes/geophp/geoPHP.inc' ); // make sure to run $ composer install on the command line
 
+$table = 'location_grid';
+$table_geometry = 'location_grid_geometry';
+
 /** FOLDERS */
 $output = [
     'output' => getcwd() . '/output/',
@@ -24,25 +27,32 @@ if ( isset( $argv[1] ) ) {
     print 'parent_id argument missing' . PHP_EOL;
     die();
 }
-if ( isset( $argv[2] ) ) {
-    $level = $argv[2];
-} else {
-    print 'level argument missing' . PHP_EOL;
-    die();
-}
-
-
+//if ( isset( $argv[2] ) ) {
+//    $level = $argv[2];
+//} else {
+//    print 'level argument missing' . PHP_EOL;
+//    die();
+//}
 
 //$query_raw = mysqli_query( $con,
-//    "SELECT lg.*, lgg.geoJSON
-//            FROM location_grid lg
-//            LEFT JOIN location_grid_geometry lgg ON lgg.grid_id=lg.grid_id
-//            WHERE lg.parent_id = {$code}" );
+//    "SELECT lg.*, lg.geoJSON
+//            FROM morocco lg
+//            WHERE lg.admin0_grid_id = {$code} AND level_name = '{$level}'" );
+
+//$query_raw = mysqli_query( $con,
+//    "SELECT lg.*, lgm.geoJSON
+//            FROM {$table} lg
+//            JOIN {$table_geometry} lgm ON lgm.grid_id=lg.grid_id
+//            WHERE lg.admin0_grid_id = {$code} AND level > 0 AND level < 3 ORDER BY level DESC" );
 
 $query_raw = mysqli_query( $con,
-    "SELECT lg.*, lg.geoJSON
-            FROM morocco lg
-            WHERE lg.admin0_grid_id = {$code} AND level_name = '{$level}'" );
+    "SELECT lg.*, lgm.geoJSON
+            FROM {$table} lg
+            JOIN {$table_geometry} lgm ON lgm.grid_id=lg.grid_id
+            WHERE ( admin1_grid_id IN (100241762, 100241763, 100241764, 100241765, 100241768, 100241776) AND level = 2 )
+            OR ( lg.admin0_grid_id = {$code} AND level > 0 AND level < 2 )
+            ORDER BY level DESC
+            " );
 
 
 if ( empty( $query_raw ) ) {
@@ -58,20 +68,12 @@ foreach( $query as $result ) {
     $grid_id = $result['grid_id'];
     $geometry = $result['geoJSON'];
 
+    $props = $result;
+    unset($props['geoJSON']);
+
     $features[] = array(
         "type" => "Feature",
-        "properties" => array(
-            'name' => $result['name'],
-            'id' => $result['grid_id'],
-            "grid_id" => $result['grid_id'],
-            'country_code' => $result['country_code'],
-            "admin0_code" => $result['admin0_code'],
-            "level" => $result['level_name'],
-            "parent_id" => $result['parent_id'],
-            'center_lat' => $result['latitude'],
-            'center_lng' => $result['longitude'],
-            'FID' => $result['grid_id'],
-        ),
+        "properties" => $props,
         "geometry" => json_decode( $geometry, true ),
     );
     print $result['grid_id'] . PHP_EOL;
