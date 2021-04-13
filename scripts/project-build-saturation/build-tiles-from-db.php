@@ -87,17 +87,20 @@ if ( empty( $query_raw ) ) {
 }
 $query = mysqli_fetch_all( $query_raw, MYSQLI_ASSOC );
 $list = array_map( function ( $a ) { return $a['grid_id'];}, $query );
-$list = array_chunk( $list, 500 );
+$list = array_chunk( $list, 1000 );
 
 $file_name = 'world.geojson';
 
-$geojson_start = '{"type":"FeatureCollection","features":[';
-$geojson_end = ']}';
 
-file_put_contents( $output['output'] . $file_name, $geojson_start );
 
 
 foreach ( $list as $index => $chunk ) {
+    $file_name = $index + 1 . '.geojson';
+
+    $geojson_start = '{"type":"FeatureCollection","features":[';
+    $geojson_end = ']}';
+
+    file_put_contents( $output['output'] . $file_name, $geojson_start );
 
     $sql_prepared = dt_array_to_sql($chunk);
 
@@ -121,7 +124,7 @@ foreach ( $list as $index => $chunk ) {
                 LEFT JOIN location_grid as a4 ON lg.admin4_grid_id=a4.grid_id
                 LEFT JOIN location_grid as a5 ON lg.admin5_grid_id=a5.grid_id
                WHERE lg.grid_id IN ({$sql_prepared})" )
-                ;
+    ;
     if ( empty( $query_raw ) ) {
         print_r( $con );
         die();
@@ -137,7 +140,6 @@ foreach ( $list as $index => $chunk ) {
 
         $features[] = array(
             "type" => "Feature",
-            "grid_id" => $grid_id,
             "id" => $grid_id,
             "properties" => array(
                 'full_name' => _full_name( $result ),
@@ -166,9 +168,11 @@ foreach ( $list as $index => $chunk ) {
 
     print 'Chunk ' . $index . PHP_EOL;
 
+    file_put_contents( $output['output'] . $file_name, $geojson_end, FILE_APPEND );
+
 }
 
-file_put_contents( $output['output'] . $file_name, $geojson_end, FILE_APPEND );
+
 
 print 'END' . PHP_EOL;
 

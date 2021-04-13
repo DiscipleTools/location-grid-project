@@ -27,32 +27,18 @@ if ( isset( $argv[1] ) ) {
     print 'parent_id argument missing' . PHP_EOL;
     die();
 }
-//if ( isset( $argv[2] ) ) {
-//    $level = $argv[2];
-//} else {
-//    print 'level argument missing' . PHP_EOL;
-//    die();
-//}
-
-//$query_raw = mysqli_query( $con,
-//    "SELECT lg.*, lg.geoJSON
-//            FROM morocco lg
-//            WHERE lg.admin0_grid_id = {$code} AND level_name = '{$level}'" );
-
-//$query_raw = mysqli_query( $con,
-//    "SELECT lg.*, lgm.geoJSON
-//            FROM {$table} lg
-//            JOIN {$table_geometry} lgm ON lgm.grid_id=lg.grid_id
-//            WHERE lg.admin0_grid_id = {$code} AND level > 0 AND level < 3 ORDER BY level DESC" );
+if ( isset( $argv[2] ) ) {
+    $level = $argv[2];
+} else {
+    print 'level argument missing' . PHP_EOL;
+    die();
+}
 
 $query_raw = mysqli_query( $con,
-    "SELECT lg.*, lgm.geoJSON
+    "SELECT lg.*, lgg.geoJSON
             FROM {$table} lg
-            JOIN {$table_geometry} lgm ON lgm.grid_id=lg.grid_id
-            WHERE ( admin1_grid_id IN (100241762, 100241763, 100241764, 100241765, 100241768, 100241776) AND level = 2 )
-            OR ( lg.admin0_grid_id = {$code} AND level > 0 AND level < 2 )
-            ORDER BY level DESC
-            " );
+            JOIN {$table_geometry} as lgg On lgg.grid_id=lg.grid_id
+            WHERE lg.admin0_grid_id = {$code} AND level = '{$level}'" );
 
 
 if ( empty( $query_raw ) ) {

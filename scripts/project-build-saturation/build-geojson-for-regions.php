@@ -1,6 +1,24 @@
 <?php
 /**
- * Creates a lowest leve to admin2 grid for the entire country
+ * Creates geojson regions
+ *
+ *  Northern Africa	015
+    Sub-Saharan Africa	202
+    Latin America and the Caribbean	419
+    Northern America	021
+    Central Asia	143
+    Eastern Asia	030
+    South-eastern Asia	035
+    Southern Asia	034
+    Western Asia	145
+    Eastern Europe	151
+    Northern Europe	154
+    Southern Europe	039
+    Western Europe	155
+    Australia and New Zealand	053
+    Melanesia	054
+    Micronesia	057
+    Polynesia	061
  */
 require_once( 'con.php' );
 
@@ -16,6 +34,38 @@ foreach ( $output as $dirname ) {
         mkdir($dirname, 0755, true);
     }
 }
+
+if ( isset( $argv[1] ) ) {
+    $code = $argv[1];
+} else {
+    print 'parent_id argument missing' . PHP_EOL;
+    die();
+}
+$level = '';
+if ( isset( $argv[2] ) ) {
+    $level = $argv[2];
+}
+
+if ( $level === 'inter') {
+    $region = mysqli_query( $con,
+        "SELECT grid_id 
+                FROM location_grid_m49
+                WHERE m49_intermediate_region_code = {$code};" );
+} else {
+    $region = mysqli_query( $con,
+        "SELECT grid_id 
+                FROM location_grid_m49
+                WHERE m49_subregion_code = {$code};" );
+}
+
+
+
+$region = mysqli_fetch_all( $region, MYSQLI_ASSOC );
+$region = array_map(function ( $a ) { return $a['grid_id'];}, $region );
+$country_list = implode(',', $region );
+
+//print $regions_sql;
+//die();
 
 $query_raw = mysqli_query( $con,
     "
@@ -94,6 +144,7 @@ FROM (
     GROUP BY a0.grid_id, a0.name, lge1.level_name
 
 ) as tbl
+WHERE grid_id IN ($country_list)
 ORDER BY name;
 ;
     " );
@@ -103,22 +154,30 @@ if ( empty( $query_raw ) ) {
 }
 $query = mysqli_fetch_all( $query_raw, MYSQLI_ASSOC );
 
-foreach ( $query as $country ) {
+$file_name = $code . '.geojson';
+
+$geojson_start = '{"type":"FeatureCollection","features":[';
+$geojson_end = ']}';
+
+file_put_contents( $output['output'] . $file_name, $geojson_start );
+
+
+foreach ( $query as $index => $country ) {
     $grid_id = $country['grid_id'];
     $level_name = $country['level_name'];
 
     $query_raw = mysqli_query( $con,
-        "SELECT 
-                lg.*, 
-                g.geoJSON, 
+        "SELECT
+                lg.*,
+                g.geoJSON,
                 a0.name as admin0_name,
                 a1.name as admin1_name,
                 a2.name as admin2_name,
                 a3.name as admin3_name,
                 a4.name as admin4_name,
                 a5.name as admin5_name
-                FROM {$tables['grid']} as lg 
-                JOIN {$tables['geometry']} as g ON g.grid_id=lg.grid_id 
+                FROM {$tables['grid']} as lg
+                JOIN {$tables['geometry']} as g ON g.grid_id=lg.grid_id
                 LEFT JOIN location_grid as a0 ON lg.admin0_grid_id=a0.grid_id
                 LEFT JOIN location_grid as a1 ON lg.admin1_grid_id=a1.grid_id
                 LEFT JOIN location_grid as a2 ON lg.admin2_grid_id=a2.grid_id
@@ -160,17 +219,19 @@ foreach ( $query as $country ) {
         print '#';
     }
 
-    $geojson = array(
-        'type' => "FeatureCollection",
-        'features' => $features,
-    );
-    $geojson = json_encode( $geojson );
+    $features = json_encode( $features );
+    $features = ltrim( $features, '[');
+    $features = rtrim( $features, ']');
 
-    file_put_contents( $output['output'] . $grid_id .  '.geojson', $geojson );
+    if ( $index !== 0 ) {
+        $features = ',' . $features;
+    }
 
-    print PHP_EOL . ' (' . $grid_id . ') ' . PHP_EOL;
+    file_put_contents( $output['output'] . $file_name, $features, FILE_APPEND );
 
 }
+
+file_put_contents( $output['output'] . $file_name, $geojson_end, FILE_APPEND );
 
 print 'END' . PHP_EOL;
 
@@ -190,4 +251,17 @@ function _full_name( $row ) {
     }
 
     return $label;
+}
+function dt_array_to_sql( $values) {
+    if (empty( $values )) {
+        return 'NULL';
+    }
+    foreach ($values as &$val) {
+        if ('\N' === $val) {
+            $val = 'NULL';
+        } else {
+            $val = "'" . trim( $val ) . "'";
+        }
+    }
+    return implode( ',', $values );
 }
