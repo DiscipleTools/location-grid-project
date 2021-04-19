@@ -1,6 +1,6 @@
 <?php
 // Extend PHP limits for large processing
-ini_set('memory_limit', '50000M');
+ini_set('memory_limit', '1000000M');
 
 
 // define table names

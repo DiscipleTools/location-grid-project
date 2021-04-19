@@ -134,22 +134,19 @@ foreach ( $list as $index => $chunk ) {
 
         $grid_id = $result['grid_id'];
         $geometry = $result['geoJSON'];
+        $geometry = json_decode( $geometry, true );
+        if ( empty( $geometry ) ){
+            $geometry = [];
+        }
 
         $features[] = array(
             "type" => "Feature",
-            "grid_id" => $grid_id,
             "id" => $grid_id,
             "properties" => array(
                 'full_name' => _full_name( $result ),
                 "grid_id" => $result['grid_id'],
-//                'country_code' => $result['country_code'],
-//                'n' => $result['north_latitude'],
-//                "level_name" => $result['level_name'],
-//                's' => $result['south_latitude'],
-//                'e' => $result['east_longitude'],
-//                'w' => $result['west_longitude']
             ),
-            "geometry" => json_decode( $geometry, true ),
+            "geometry" => $geometry,
         );
 
         print '#';

@@ -1,5 +1,7 @@
 <?php
 /**
+ * This is a GIS full admin layer.
+ *
  * $ php {{filename}}.php {{parent_id}} {{level_name}}
  */
 require_once( 'con.php' );
@@ -31,8 +33,6 @@ if ( isset( $argv[2] ) ) {
     die();
 }
 
-
-
 $query_raw = mysqli_query( $con,
     "SELECT lg.*, lgg.geoJSON
             FROM location_grid lg
@@ -55,6 +55,7 @@ foreach( $query as $result ) {
 
     $features[] = array(
         "type" => "Feature",
+        'id' => $result['grid_id'],
         "properties" => array(
             'name' => $result['name'],
             'id' => $result['grid_id'],
@@ -77,6 +78,7 @@ $geojson = array(
     'features' => $features,
 );
 $geojson = json_encode( $geojson );
+$geojson = trim(preg_replace('/\n/', '', $geojson));
 
 file_put_contents( $output['output'] . $code . '_' . $level .  '.geojson', $geojson );
 

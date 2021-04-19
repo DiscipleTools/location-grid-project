@@ -1,4 +1,9 @@
 <?php
+/**
+ * Create all files in a country.
+ * $ php {filename} {grid_id} // defaults to admin0 query
+ * $ php {filename} {grid_id} {true} // queries by parent_id
+ */
 require_once( 'con.php' );
 
 print 'BEGIN' . PHP_EOL;
@@ -22,11 +27,16 @@ if ( isset( $argv[1] ) ) {
     print 'admin0_code argument missing' . PHP_EOL;
     die();
 }
+if ( isset( $argv[2] ) ) {
+    $layer = 'parent_id';
+} else {
+    $layer = 'admin0_grid_id';
+}
 
 $list_raw = mysqli_query( $con,
-    "SELECT lg.grid_id
+    "SELECT DISTINCT lg.grid_id
                     FROM location_grid as lg 
-                    WHERE lg.admin0_grid_id = '{$code}'
+                    WHERE lg.{$layer} = '{$code}'
                     " );
 
 if ( empty( $list_raw ) ) {
@@ -75,6 +85,7 @@ foreach( $list as $row ) {
 
             $features[] = array(
                 "type" => "Feature",
+                'id' => $result['grid_id'],
                 "properties" => array(
                     'name' => $result['name'],
                     'id' => $result['grid_id'],
@@ -97,6 +108,8 @@ foreach( $list as $row ) {
             'features' => $features,
         );
         $geojson = json_encode( $geojson );
+        $geojson = trim(preg_replace('/\n/', '', $geojson));
+
 
         file_put_contents( $output['output'] . $grid_id .  '.geojson', $geojson );
 

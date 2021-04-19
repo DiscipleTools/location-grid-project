@@ -1,4 +1,9 @@
 <?php
+/**
+ * This is a GIS full admin layer.
+ *
+ * $ php {{filename}}.php {{parent_id}} {{level_name}}
+ */
 require_once( 'con.php' );
 
 print 'BEGIN' . PHP_EOL;
@@ -7,6 +12,12 @@ include_once( '../vendor/phayes/geophp/geoPHP.inc' ); // make sure to run $ comp
 /** FOLDERS */
 $output = [
     'output' => getcwd() . '/output/',
+    'output/0' => getcwd() . '/output/0/',
+    'output/1' => getcwd() . '/output/1/',
+    'output/2' => getcwd() . '/output/2/',
+    'output/3' => getcwd() . '/output/3/',
+    'output/4' => getcwd() . '/output/4/',
+    'output/5' => getcwd() . '/output/5/',
 ];
 foreach ( $output as $dirname ) {
     if ( ! is_dir( $dirname ) ) {
@@ -16,41 +27,35 @@ foreach ( $output as $dirname ) {
 
 /* parent id */
 if ( isset( $argv[1] ) ) {
-    $code = $argv[1];
+    $level = $argv[1];
 } else {
-    print 'admin0_code argument missing' . PHP_EOL;
+    print 'parent_id argument missing' . PHP_EOL;
     die();
 }
 
-$query_raw = mysqli_query( $con,
-    "SELECT 
-                lg.*, 
-                g.geoJSON, 
-                a0.name as admin0_name,
-                a1.name as admin1_name,
-                a2.name as admin2_name,
-                a3.name as admin3_name,
-                a4.name as admin4_name,
-                a5.name as admin5_name
-                FROM location_grid as lg 
-                JOIN location_grid_geometry as g ON g.grid_id=lg.grid_id 
-                LEFT JOIN location_grid as a0 ON lg.admin0_grid_id=a0.grid_id
-                LEFT JOIN location_grid as a1 ON lg.admin1_grid_id=a1.grid_id
-                LEFT JOIN location_grid as a2 ON lg.admin2_grid_id=a2.grid_id
-                LEFT JOIN location_grid as a3 ON lg.admin3_grid_id=a3.grid_id
-                LEFT JOIN location_grid as a4 ON lg.admin4_grid_id=a4.grid_id
-                LEFT JOIN location_grid as a5 ON lg.admin5_grid_id=a5.grid_id
-                WHERE lg.grid_id = '{$code}'
-                " );
-
-if ( empty( $query_raw ) ) {
+$list_raw = mysqli_query( $con,
+    "SELECT DISTINCT lg.admin0_grid_id as grid_id
+            FROM location_grid lg
+            WHERE level = {$level}" );
+if ( empty( $list_raw ) ) {
     print_r( $con );
     die();
 }
-$query = mysqli_fetch_all( $query_raw, MYSQLI_ASSOC );
+$list = mysqli_fetch_all( $list_raw, MYSQLI_ASSOC );
+$list = array_map(function ( $a ) { return $a['grid_id'];}, $list );
 
+foreach ( $list as $code ){
+    $query_raw = mysqli_query( $con,
+        "SELECT lg.*, lgg.geoJSON
+            FROM location_grid lg
+            LEFT JOIN location_grid_geometry lgg ON lgg.grid_id=lg.grid_id
+            WHERE lg.admin0_grid_id = {$code} AND level = {$level}" );
+    if ( empty( $query_raw ) ) {
+        print_r( $con );
+        die();
+    }
+    $query = mysqli_fetch_all( $query_raw, MYSQLI_ASSOC );
 
-foreach( $query as $item ){
     /* Feature collection */
     $features = [];
     foreach( $query as $result ) {
@@ -85,15 +90,8 @@ foreach( $query as $item ){
     $geojson = json_encode( $geojson );
     $geojson = trim(preg_replace('/\n/', '', $geojson));
 
-    $geometry = geoPHP::load( $geojson, 'geojson' );
-    $centroid = $geometry->getCentroid();
-    print_r($centroid);
-
-    $bounds = $geometry->getBBox();
-    print_r($bounds);
-
-    file_put_contents( $output['output'] . $grid_id .  '.geojson', $geojson );
-
+    file_put_contents( $output['output'] . $level . '/' . $code .  '.geojson', $geojson );
 }
+
 
 print 'END' . PHP_EOL;

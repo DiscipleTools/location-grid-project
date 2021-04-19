@@ -46,6 +46,7 @@ foreach( $query as $result ) {
 
     $features[] = array(
         "type" => "Feature",
+        'id' => $result['grid_id'],
         "properties" => array(
             'name' => $result['name'],
             'id' => $result['grid_id'],
@@ -68,6 +69,7 @@ $geojson = array(
     'features' => $features,
 );
 $geojson = json_encode( $geojson );
+$geojson = trim(preg_replace('/\n/', '', $geojson));
 
 file_put_contents( $output['output'] . $code .  '.geojson', $geojson );
 

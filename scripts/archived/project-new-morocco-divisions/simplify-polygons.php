@@ -45,4 +45,16 @@ foreach( $files as $file ) {
     }
 }
 
+
+$scan = scandir( $new_directory );
+foreach( $scan as $file ) {
+    if ( preg_match( '/.geojson/', $file ) ) {
+        $geojson = file_get_contents($new_directory . $file);
+        $geojson = trim(preg_replace('/\n/', '', $geojson));
+        file_put_contents( $new_directory . $file, $geojson );
+    }
+}
+//print_r( $files );
+
+
 print date('H:i:s') . ' | End ' . PHP_EOL;

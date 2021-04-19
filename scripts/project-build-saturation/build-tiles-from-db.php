@@ -89,21 +89,14 @@ $query = mysqli_fetch_all( $query_raw, MYSQLI_ASSOC );
 $list = array_map( function ( $a ) { return $a['grid_id'];}, $query );
 $list = array_chunk( $list, 1000 );
 
-$file_name = 'world.geojson';
 
+foreach ( $list as $file_index => $chunk ) {
 
+    ob_start();
 
-
-foreach ( $list as $index => $chunk ) {
-    $file_name = $index + 1 . '.geojson';
-
-    $geojson_start = '{"type":"FeatureCollection","features":[';
-    $geojson_end = ']}';
-
-    file_put_contents( $output['output'] . $file_name, $geojson_start );
+    print '{"type":"FeatureCollection","features":[';
 
     $sql_prepared = dt_array_to_sql($chunk);
-
     $query_raw = mysqli_query( $con,
         "
         SELECT
@@ -123,8 +116,7 @@ foreach ( $list as $index => $chunk ) {
                 LEFT JOIN location_grid as a3 ON lg.admin3_grid_id=a3.grid_id
                 LEFT JOIN location_grid as a4 ON lg.admin4_grid_id=a4.grid_id
                 LEFT JOIN location_grid as a5 ON lg.admin5_grid_id=a5.grid_id
-               WHERE lg.grid_id IN ({$sql_prepared})" )
-    ;
+               WHERE lg.grid_id IN ({$sql_prepared})");
     if ( empty( $query_raw ) ) {
         print_r( $con );
         die();
@@ -133,45 +125,47 @@ foreach ( $list as $index => $chunk ) {
 
     /* Feature collection */
     $features = [];
-    foreach( $query as $result ) {
+    foreach( $query as $index => $result ) {
 
         $grid_id = $result['grid_id'];
         $geometry = $result['geoJSON'];
+        $geometry = json_decode( $geometry, true );
+        if ( empty( $geometry ) ){
+            $geometry = [];
+        }
 
-        $features[] = array(
+        $features = array(
             "type" => "Feature",
             "id" => $grid_id,
             "properties" => array(
                 'full_name' => _full_name( $result ),
                 "grid_id" => $result['grid_id'],
-//                'country_code' => $result['country_code'],
-//                'n' => $result['north_latitude'],
-//                "level_name" => $result['level_name'],
-//                's' => $result['south_latitude'],
-//                'e' => $result['east_longitude'],
-//                'w' => $result['west_longitude']
             ),
-            "geometry" => json_decode( $geometry, true ),
+            "geometry" => $geometry,
         );
 
-        print '#';
+        $features = json_encode( $features );
+        $features = ltrim( $features, '[');
+        $features = rtrim( $features, ']');
+
+        if ( $index !== 0 ) {
+            $features = ',' . $features;
+        }
+
+        print $features;
     }
-    $features = json_encode( $features );
-    $features = ltrim( $features, '[');
-    $features = rtrim( $features, ']');
 
-    if ( $index !== 0 ) {
-        $features = ',' . $features;
-    }
+    print ']}';
 
-    file_put_contents( $output['output'] . $file_name, $features, FILE_APPEND );
+    $content = ob_get_contents();
+    $content = trim($content);
+    ob_end_clean();
 
-    print 'Chunk ' . $index . PHP_EOL;
+    $file_name = $file_index + 1 . '.geojson';
+    file_put_contents( $output['output'] . $file_name, $content );
 
-    file_put_contents( $output['output'] . $file_name, $geojson_end, FILE_APPEND );
-
+    print $file_name . PHP_EOL;
 }
-
 
 
 print 'END' . PHP_EOL;

@@ -10,13 +10,16 @@
 
 print date('H:i:s') . ' | Start ' . PHP_EOL;
 
-$target_directory = getcwd() . '/output/'; // polygons single
-
-$new_directory = $target_directory . 'simplified_output/';
+if ( isset( $argv[2] ) && is_numeric( $argv[2] ) ) {
+    $target_directory = getcwd() . '/output/' . $argv[2] . '/';
+    $new_directory = getcwd() . '/output/simplified_output/' . $argv[2] . '/';
+} else {
+    $target_directory = getcwd() . '/output/'; // polygons single
+    $new_directory = $target_directory . 'simplified_output/';
+}
 if( ! is_dir( $new_directory ) ) {
     mkdir( $new_directory, 0755, true);
 }
-
 
 // scan target dir
 $files = [];
@@ -26,7 +29,6 @@ foreach( $scan as $file ) {
         $files[] = $file;
     }
 }
-//print_r( $files );
 
 // scan new dir
 $current_files = [];
@@ -37,11 +39,26 @@ foreach( $scan as $file ) {
     }
 }
 
-
 foreach( $files as $file ) {
     if ( array_search( $file, $current_files ) === false ) {
         shell_exec('mapshaper '. $target_directory . $file .' -simplify '.$argv[1].'% -o '.$new_directory . $file.' -clean allow-empty');
         print date('H:i:s') . ' | ' . $file . PHP_EOL;
+    }
+}
+
+$scan = scandir( $new_directory );
+foreach( $scan as $file ) {
+    if ( preg_match( '/.geojson/', $file ) ) {
+        if ( filesize($new_directory . $file) < 10000000 ) {
+            $geojson = file_get_contents($new_directory . $file);
+            $geojson = trim(preg_replace('/\n/', '', $geojson));
+            $geojson = trim(preg_replace('/, "/', ',"', $geojson));
+            $geojson = trim(preg_replace('/: "/', ':"', $geojson));
+            $geojson = trim(preg_replace('/: \[/', ':[', $geojson));
+            $geojson = trim(preg_replace('/: {/', ':{', $geojson));
+            file_put_contents( $new_directory . $file, $geojson );
+            $geojson = null;
+        }
     }
 }
 

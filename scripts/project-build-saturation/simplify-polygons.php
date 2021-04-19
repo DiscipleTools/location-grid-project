@@ -1,4 +1,10 @@
 <?php
+/**
+ * Command line script
+ * Gets geojson files from output and simplifies them using mapshaper cli and outputs them to simplified_output folder.
+ * @version 1
+ *
+ */
 // Simplify polygons with mapshaper
 // @link https://github.com/mbloch/mapshaper
 
@@ -34,10 +40,21 @@ foreach( $scan as $file ) {
 
 foreach( $files as $file ) {
     if ( array_search( $file, $current_files ) === false ) {
-        shell_exec('mapshaper '. $target_directory . $file .' -simplify  '.$argv[1].'% -o '.$new_directory . $file.' -clean allow-empty');
+        shell_exec('mapshaper '. $target_directory . $file .' -simplify '.$argv[1].'% -o '.$new_directory . $file.' -clean allow-empty');
         print date('H:i:s') . ' | ' . $file . PHP_EOL;
     }
 }
+
+
+$scan = scandir( $new_directory );
+foreach( $scan as $file ) {
+    if ( preg_match( '/.geojson/', $file ) ) {
+        $geojson = file_get_contents($new_directory . $file);
+        $geojson = trim(preg_replace('/\n/', '', $geojson));
+        file_put_contents( $new_directory . $file, $geojson );
+    }
+}
+//print_r( $files );
 
 
 print date('H:i:s') . ' | End ' . PHP_EOL;
