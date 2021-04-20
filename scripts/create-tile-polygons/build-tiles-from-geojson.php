@@ -1,5 +1,5 @@
 <?php
-ini_set('memory_limit', '500000M');
+ini_set('memory_limit', '500000000M');
 /**
  * Build geojson tiles
  */
@@ -10,16 +10,22 @@ if ( empty( $world_geojson ) ){
     die();
 }
 
-$tile_block = 2000;
+$tile_block = 1000;
+if ( isset( $argv[1] ) ) {
+    $tile_block = $argv[1];
+}
 
 $removed = 0;
+$total_features = 0;
 
 $file_name = 1;
 $i = 0;
+$total_i = 0;
+$features_count = count( $world_geojson['features']);
 $new_feature_set = [];
+
 foreach($world_geojson['features'] as $feature ){
     if (empty( $feature['geometry'] ) ) {
-        print_r( $feature['geometry'] );
         print $feature['properties']['grid_id'] . ' | '. $feature['properties']['full_name'] . PHP_EOL;
         print $file_name .  '.geojson'. PHP_EOL;
         $removed++;
@@ -28,7 +34,9 @@ foreach($world_geojson['features'] as $feature ){
     $new_feature_set[] = $feature;
 
     $i++;
-    if ( $tile_block <= $i ){
+    $total_i++;
+    $total_features++;
+    if ( $tile_block <= $i || $features_count == $total_i ){
 
         $geojson = array(
             'type' => "FeatureCollection",
@@ -40,11 +48,13 @@ foreach($world_geojson['features'] as $feature ){
         $i = 0;
         $file_name++;
         $new_feature_set = [];
+
     }
 
     print $feature['properties']['full_name'] . PHP_EOL;
 
 }
+print 'Features processed: ' . $total_features . PHP_EOL;
 print $removed . PHP_EOL;
 print 'END' . PHP_EOL;
 
