@@ -8,24 +8,25 @@ require_once( 'con.php' );
 
 print 'BEGIN' . PHP_EOL;
 
-/** FOLDERS */
+/********************************************************************************************************************
+ *
+ * SETUP PROCESSING AND DESTINATION FOLDERS
+ *
+ ********************************************************************************************************************/
+print '***************************************************************************************************' . PHP_EOL;
+print 'BUILD DIRECTORIES' . PHP_EOL;
 $output = [
-    'output' => getcwd() . '/output/json_db/',
+    'output' => '/Users/chris/Documents/Projects/location-grid-render/json_db/',
+    'children' => '/Users/chris/Documents/Projects/location-grid-render/json_db/children/',
 ];
-
-// override destination output
-if ( isset( $argv[1] ) ) {
-    $output = [
-        'output' => $argv[1],
-    ];
-}
-
 foreach ( $output as $dirname ) {
     if ( ! is_dir( $dirname ) ) {
         mkdir($dirname, 0755, true);
     }
 }
 
+print '***************************************************************************************************' . PHP_EOL;
+print 'BUILD JSON_DB' . PHP_EOL;
 $query_raw = mysqli_query( $con,
     "SELECT 
                 lg.*, 
@@ -69,7 +70,7 @@ foreach ( $query as $row ){
 
     file_put_contents( $output['output'] . $row['grid_id'] . '.json', $json );
 
-    print '#';
+    print '.';
 }
 
 print 'END' . PHP_EOL;
@@ -152,29 +153,17 @@ function _format_location_grid_types( $row ) {
     }
     return $row;
 }
-print PHP_EOL . 'END BASE' . PHP_EOL;
+print PHP_EOL . 'END BASE' . PHP_EOL.PHP_EOL.PHP_EOL;
 
 
 
+
+
+
+print '***************************************************************************************************' . PHP_EOL;
 print 'BEGIN CHILDREN' . PHP_EOL;
+print '***************************************************************************************************' . PHP_EOL;
 
-/** FOLDERS */
-$output = [
-    'output' => getcwd() . '/output/json_db/children/',
-];
-
-// override destination output
-if ( isset( $argv[1] ) ) {
-    $output = [
-        'output' => $argv[1] . 'children/',
-    ];
-}
-
-foreach ( $output as $dirname ) {
-    if ( ! is_dir( $dirname ) ) {
-        mkdir($dirname, 0755, true);
-    }
-}
 
 $query_raw = mysqli_query( $con,
     "SELECT 
@@ -262,10 +251,12 @@ foreach ( $query as $row ){
 
     $json = json_encode( $row );
 
-    file_put_contents( $output['output'] . $row['grid_id'] . '.json', $json );
+    file_put_contents( $output['children'] . $row['grid_id'] . '.json', $json );
 
     print '#';
 
 }
 
-print PHP_EOL . 'END CHILDREN' . PHP_EOL;
+print '***************************************************************************************************' . PHP_EOL;
+print PHP_EOL . 'END' . PHP_EOL;
+print '***************************************************************************************************' . PHP_EOL;

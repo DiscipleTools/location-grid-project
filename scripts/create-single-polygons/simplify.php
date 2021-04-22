@@ -61,11 +61,11 @@ print date('H:i:s') . ' | Process Files ' . PHP_EOL;
 print date('H:i:s') . ' | Raw Files ' . count($files) . PHP_EOL;
 print date('H:i:s') . ' | Simplified Files ' . count($current_files) . PHP_EOL;
 
-$i = 0;
+$pi = 0;
 foreach( $files as $file ) {
-    $i++;
-    if ( substr($i, -3, 3) == '000' ){
-        print PHP_EOL . $i . PHP_EOL;
+    $pi++;
+    if ( substr($pi, -3, 3) == '000' ){
+        print PHP_EOL . $pi . PHP_EOL;
     }
     if ( array_search( $file, $current_files ) !== false ){
         print '*';
@@ -111,4 +111,4 @@ foreach( $scan as $file ) {
 
 print date('H:i:s') . ' | End ' . PHP_EOL;
 
-// find . -name "*.tif" -type 'f' -size -160k -delete
+// find . -name "*.geojson" -type 'f' -size +10k -delete
