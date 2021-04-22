@@ -62,4 +62,12 @@ foreach( $scan as $file ) {
     }
 }
 
+$current_files = [];
+$scan = scandir( $new_directory );
+foreach( $scan as $file ) {
+    if ( preg_match( '/.geojson/', $file ) ) {
+        shell_exec("find $new_directory -name '*.geojson' -type 'f' -size +160k -delete");
+    }
+}
+
 print date('H:i:s') . ' | End ' . PHP_EOL;
