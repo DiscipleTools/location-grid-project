@@ -206,13 +206,6 @@ foreach ( $query as $index => $country ) {
             "properties" => array(
                 "grid_id" => $result['grid_id'],
                 'full_name' => _full_name( $result ),
-                "parent_id" => $result['parent_id'],
-                'admin0_grid_id' => $result['admin0_grid_id'],
-                'country_code' => $result['country_code'],
-                'n' => $result['north_latitude'],
-                's' => $result['south_latitude'],
-                'e' => $result['east_longitude'],
-                'w' => $result['west_longitude'],
             ),
             "geometry" => json_decode( $geometry, true ),
         );

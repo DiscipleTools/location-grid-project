@@ -6,7 +6,7 @@
  */
 require_once( 'con.php' );
 
-$testing = true; // change this to false when ready to run for production.
+$testing = false; // change this to false when ready to run for production.
 
 print '***************************************************************************************************' . PHP_EOL;
 print 'BEGIN BUILD MIRROR' . PHP_EOL;
@@ -19,7 +19,7 @@ print '*************************************************************************
  ********************************************************************************************************************/
 print 'BUILD DIRECTORIES' . PHP_EOL;
 $output = [
-    'output' => '/Users/chris/Documents/Projects/location-grid-render/output/',
+    'output' => '/Users/chris/Documents/Projects/location-grid-render/output-single/',
     'low' => '/Users/chris/Documents/Projects/location-grid-render/low/',
     'high' => '/Users/chris/Documents/Projects/location-grid-render/high/',
 ];
@@ -237,6 +237,19 @@ foreach( $reductions as $setting ) {
             }
             else {
                 shell_exec('mapshaper '. $output['output'] . $file .' -simplify dp keep-shapes '.$percent_reduction.'% -o '.$output['high'] . $file.' -clean allow-empty');
+                if ( filesize($output['high'] . $file) > $max_high_size * 1000  ) {
+                    shell_exec('rm '. $output['high'] . $file );
+                }
+                else {
+                    $geojson = file_get_contents($output['high'] . $file);
+                    $geojson = trim(preg_replace('/\n/', '', $geojson));
+                    $geojson = trim(preg_replace('/, "/', ',"', $geojson));
+                    $geojson = trim(preg_replace('/: "/', ':"', $geojson));
+                    $geojson = trim(preg_replace('/: \[/', ':[', $geojson));
+                    $geojson = trim(preg_replace('/: {/', ':{', $geojson));
+                    file_put_contents( $output['high'] . $file, $geojson );
+                    $geojson = null;
+                }
             }
         }
 
@@ -249,73 +262,24 @@ foreach( $reductions as $setting ) {
             }
             else {
                 shell_exec('mapshaper '. $output['output'] . $file .' -simplify dp keep-shapes '.$percent_reduction.'% -o '.$output['low'] . $file.' -clean allow-empty');
+                if ( filesize($output['low'] . $file) > $max_low_size * 1000  ) {
+                    shell_exec('rm '. $output['low'] . $file );
+                }
+                else {
+                    $geojson = file_get_contents($output['low'] . $file);
+                    $geojson = trim(preg_replace('/\n/', '', $geojson));
+                    $geojson = trim(preg_replace('/, "/', ',"', $geojson));
+                    $geojson = trim(preg_replace('/: "/', ':"', $geojson));
+                    $geojson = trim(preg_replace('/: \[/', ':[', $geojson));
+                    $geojson = trim(preg_replace('/: {/', ':{', $geojson));
+                    file_put_contents( $output['low'] . $file, $geojson );
+                    $geojson = null;
+                }
             }
         } else {
             shell_exec('rm '. $output['output'] . $file );
         }
 
-    }
-
-    print '***************************************************************************************************' . PHP_EOL;
-    print date('H:i:s') . ' | DELETE LARGE FILES ' . PHP_EOL;
-    if ( $setting['percent_reduction'] !== 1 ) { // don't delete on the last pass
-        // delete large high
-        $current_files = [];
-        $scan = scandir( $output['high']  );
-        $folder = $output['high'];
-        foreach( $scan as $file ) {
-            if ( preg_match( '/.geojson/', $file ) ) {
-                shell_exec("find $folder -name '*.geojson' -type 'f' -size +".$max_high_size."k -delete");
-            }
-        }
-
-        // delete large low
-        $current_files = [];
-        $scan = scandir( $output['low']  );
-        $folder = $output['low'];
-        foreach( $scan as $file ) {
-            if ( preg_match( '/.geojson/', $file ) ) {
-                shell_exec("find $folder -name '*.geojson' -type 'f' -size +".$max_low_size."k -delete");
-            }
-        }
-    }
-
-
-    // quality check on high
-    print '***************************************************************************************************' . PHP_EOL;
-    print date('H:i:s') . ' | Check Quality High ' . PHP_EOL;
-    $scan = scandir( $output['high'] );
-    foreach( $scan as $file ) {
-        if ( preg_match( '/.geojson/', $file ) ) {
-            if ( filesize($output['high'] . $file) < 10000000 ) {
-                $geojson = file_get_contents($output['high'] . $file);
-                $geojson = trim(preg_replace('/\n/', '', $geojson));
-                $geojson = trim(preg_replace('/, "/', ',"', $geojson));
-                $geojson = trim(preg_replace('/: "/', ':"', $geojson));
-                $geojson = trim(preg_replace('/: \[/', ':[', $geojson));
-                $geojson = trim(preg_replace('/: {/', ':{', $geojson));
-                file_put_contents( $output['high'] . $file, $geojson );
-                $geojson = null;
-            }
-        }
-    }
-
-    // quality check on low
-    print date('H:i:s') . ' | Check Quality Low ' . PHP_EOL;
-    $scan = scandir( $output['low'] );
-    foreach( $scan as $file ) {
-        if ( preg_match( '/.geojson/', $file ) ) {
-            if ( filesize($output['low'] . $file) < 10000000 ) {
-                $geojson = file_get_contents($output['low'] . $file);
-                $geojson = trim(preg_replace('/\n/', '', $geojson));
-                $geojson = trim(preg_replace('/, "/', ',"', $geojson));
-                $geojson = trim(preg_replace('/: "/', ':"', $geojson));
-                $geojson = trim(preg_replace('/: \[/', ':[', $geojson));
-                $geojson = trim(preg_replace('/: {/', ':{', $geojson));
-                file_put_contents( $output['low'] . $file, $geojson );
-                $geojson = null;
-            }
-        }
     }
 }
 
