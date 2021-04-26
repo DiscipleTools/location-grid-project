@@ -1,6 +1,6 @@
 <?php
 // @link https://github.com/TobiaszCudnik/phpquery/blob/master/demo.php
-require( '../vendor/phpquery/phpQuery/phpQuery.php');
+//require( '../vendor/phpquery/phpQuery/phpQuery.php');
 
 
 $url = 'https://www.google.com/search?q=douglas%2C+colorado%2C+united+states+population';
@@ -10,7 +10,10 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 $output = curl_exec($ch);
 curl_close($ch);
 
-$doc = phpQuery::newDocumentHTML($output);
-print_r($doc['#rso']);
+//$doc = phpQuery::newDocumentHTML($output);
+//print_r($doc['#rso']);
 
 //print  pq('#rso');
+$dom = new DOMDocument('1.0', 'UTF-8');
+$dom = $dom->loadHTML($output);
+print_r($dom);
