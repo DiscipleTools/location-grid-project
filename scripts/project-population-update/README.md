@@ -1,6 +1,6 @@
 # Merge Populations from Scraps
 
-Made all values rounded to 100s
+## Make all values rounded to 100s
 ```
 
 UPDATE location_grid
@@ -8,105 +8,77 @@ SET location_grid.population = CEILING (location_grid.population / 100) * 100;
 
 ```
 
+## Queries to select countries at their saturation levels (elements included)
 
 ```
-SELECT lg.country_code, count(lg.grid_id) 
-FROM location_grid lg
-LEFT JOIN location_grid as a0 ON lg.admin0_grid_id=a0.grid_id
-WHERE  lg.population < 1 
-AND (lg.level < 3 OR ( a0.name IN ('China', 'India', 'France', 'Spain', 'Pakistan', 'Bangladesh') AND lg.level < 4 ) )
-GROUP BY lg.country_code;
-```
+#
+#. These three select the new saturation model.
+#
 
-```
-SELECT * FROM location_grid WHERE population < 1 AND country_code = 'BT';
-```
-
-```
-
-# Remaining populations
-SELECT lg.country_code, count(lg.grid_id) 
-FROM location_grid lg
-LEFT JOIN location_grid as a0 ON lg.admin0_grid_id=a0.grid_id
-WHERE  lg.population < 1 
-AND (lg.level < 3 OR ( a0.name IN ('China', 'India', 'France', 'Spain', 'Pakistan', 'Bangladesh') AND lg.level < 4 ) )
-GROUP BY lg.country_code;
-
-
-
-# Working populations
-
-SELECT lg.grid_id, lg.name, lg.level_name, a0.name as country, a1.name as state, a1.grid_id, lg.population, s.grid_id as sgrid, s.population as spop, (SELECT count(lgg.grid_id) FROM location_grid lgg WHERE lgg.admin1_grid_id=lg.admin1_grid_id ) as divisions
-FROM (
-SELECT * FROM location_grid WHERE population < 1 
-AND country_code = 'AE' 
-) as lg
-LEFT JOIN location_grid as a0 ON lg.admin0_grid_id=a0.grid_id
-LEFT JOIN location_grid as a1 ON lg.admin1_grid_id=a1.grid_id
-LEFT JOIN 50k_scrape s ON s.grid_id=lg.grid_id
-ORDER BY population, state ASC
+# all admin 2 without special
+SELECT a0.name, count(*)
+FROM dt_location_grid lg
+JOIN dt_location_grid as a0 ON lg.admin0_grid_id=a0.grid_id
+WHERE
+	lg.level < 3
+	AND a0.name NOT IN ('China', 'India', 'France', 'Spain', 'Pakistan', 'Bangladesh')
+    AND a0.name NOT IN ('Romania', 'Estonia', 'Bhutan', 'Croatia', 'Solomon Islands', 'Guyana', 'Iceland', 'Vanuatu', 'Cape Verde', 'Samoa', 'Faroe Islands', 'Norway', 'Uruguay', 'Mongolia', 'United Arab Emirates', 'Slovenia', 'Bulgaria', 'Honduras', 'Columbia', 'Namibia', 'Switzerland', 'Western Sahara')
+GROUP BY a0.name
 ;
 
 
 
-
-#update script
-UPDATE location_grid
-SET location_grid.population = '3600'
-WHERE population < 1 AND country_code = 'BT' AND admin1_grid_id = 100041144;
-
-
-
-
-
-
-
-
-
-
-# Remaining populations
-SELECT lg.country_code, count(lg.grid_id) AS count
-FROM location_grid lg
-LEFT JOIN location_grid as a0 ON lg.admin0_grid_id=a0.grid_id
-WHERE  lg.population < 1 
-AND (lg.level < 3 OR ( a0.name IN ('China', 'India', 'France', 'Spain', 'Pakistan', 'Bangladesh') AND lg.level < 4 ) )
-GROUP BY lg.country_code
-ORDER BY count DESC;
-
-
-
-# admin level 2
-UPDATE location_grid
-INNER JOIN (
-	SELECT lc.grid_id, lc.parent_id, lc.name, ROUND( ( SELECT lg0.population FROM location_grid lg0 WHERE lg0.grid_id=lc.admin0_grid_id ) / ( SELECT count(lgg.grid_id) FROM location_grid lgg WHERE lgg.admin1_grid_id=lc.admin1_grid_id ) ) as population
-	FROM location_grid lc
-	WHERE lc.country_code IN (
-SELECT lg.country_code
-FROM location_grid lg
-LEFT JOIN location_grid as a0 ON lg.admin0_grid_id=a0.grid_id
-WHERE  lg.population < 1 
-AND (lg.level < 3 OR ( a0.name IN ('China', 'India', 'France', 'Spain', 'Pakistan', 'Bangladesh') AND lg.level < 4 ) )
-GROUP BY lg.country_code
-)  AND lc.level = 2 AND lc.population < 1
-) as tb ON location_grid.grid_id = tb.grid_id 
-SET location_grid.population = tb.population
+# only admin3
+SELECT a0.name, count(*)
+FROM dt_location_grid lg
+JOIN dt_location_grid as a0 ON lg.admin0_grid_id=a0.grid_id
+WHERE
+	lg.level < 4
+	AND a0.name IN ('China', 'India', 'France', 'Spain', 'Pakistan', 'Bangladesh')
+    AND a0.name NOT IN ('Romania', 'Estonia', 'Bhutan', 'Croatia', 'Solomon Islands', 'Guyana', 'Iceland', 'Vanuatu', 'Cape Verde', 'Samoa', 'Faroe Islands', 'Norway', 'Uruguay', 'Mongolia', 'United Arab Emirates', 'Slovenia', 'Bulgaria', 'Honduras', 'Columbia', 'Namibia', 'Switzerland', 'Western Sahara')
+GROUP BY a0.name
 ;
 
-# admin level 3
-UPDATE location_grid
-INNER JOIN (
-	SELECT lc.grid_id, lc.parent_id, lc.name, ROUND( ( SELECT lg0.population FROM location_grid lg0 WHERE lg0.grid_id=lc.admin1_grid_id ) / ( SELECT count(lgg.grid_id) FROM location_grid lgg WHERE lgg.admin2_grid_id=lc.admin2_grid_id ) ) as population
-	FROM location_grid lc
-	WHERE lc.country_code IN (
-SELECT lg.country_code
-FROM location_grid lg
-LEFT JOIN location_grid as a0 ON lg.admin0_grid_id=a0.grid_id
-WHERE  lg.population < 1 
-AND (lg.level < 3 OR ( a0.name IN ('China', 'India', 'France', 'Spain', 'Pakistan', 'Bangladesh') AND lg.level < 4 ) )
-GROUP BY lg.country_code
-)  AND lc.level = 3 AND population < 1
-) as tb ON location_grid.grid_id = tb.grid_id 
-SET location_grid.population = tb.population
+
+# only admin 1
+SELECT a0.name, count(*)
+FROM dt_location_grid lg
+JOIN dt_location_grid as a0 ON lg.admin0_grid_id=a0.grid_id
+WHERE
+	lg.level < 2
+	AND a0.name NOT IN ('China', 'India', 'France', 'Spain', 'Pakistan', 'Bangladesh')
+    AND a0.name IN ('Romania', 'Estonia', 'Bhutan', 'Croatia', 'Solomon Islands', 'Guyana', 'Iceland', 'Vanuatu', 'Cape Verde', 'Samoa', 'Faroe Islands', 'Norway', 'Uruguay', 'Mongolia', 'United Arab Emirates', 'Slovenia', 'Bulgaria', 'Honduras', 'Columbia', 'Namibia', 'Switzerland', 'Western Sahara')
+GROUP BY a0.name
 ;
 
+```
+## DELETE QUERIES dt_location_grid
+
+```
+DELETE FROM dt_location_grid
+WHERE level > 2
+	#'China', 'India', 'France', 'Spain', 'Pakistan', 'Bangladesh'
+	AND admin0_grid_id NOT IN (100050711,100219347,100074576,100259978,100018514) 
+	#'Romania', 'Estonia', 'Bhutan', 'Croatia', 'Solomon Islands', 'Guyana', 'Iceland', 'Vanuatu', 'Cape Verde', 'Samoa', 'Faroe Islands', 'Norway', 'Uruguay', 'Mongolia', 'United Arab Emirates', 'Slovenia', 'Bulgaria', 'Honduras', 'Columbia', 'Namibia', 'Switzerland', 'Western Sahara'
+	AND admin0_grid_id NOT IN (100314737,100083318,100041128,100133112,100341242,100132648,100222839,100379914,100055707,100379993,100130389,100255271,100363975,100248845,100001527,100342458,100024289,100132795,100054605,100253456,100342975,100074571)
+;
+
+DELETE FROM dt_location_grid
+WHERE level > 3
+	#'China', 'India', 'France', 'Spain', 'Pakistan', 'Bangladesh'
+	AND admin0_grid_id IN (100050711,100219347,100074576,100259978,100018514) 
+	#'Romania', 'Estonia', 'Bhutan', 'Croatia', 'Solomon Islands', 'Guyana', 'Iceland', 'Vanuatu', 'Cape Verde', 'Samoa', 'Faroe Islands', 'Norway', 'Uruguay', 'Mongolia', 'United Arab Emirates', 'Slovenia', 'Bulgaria', 'Honduras', 'Columbia', 'Namibia', 'Switzerland', 'Western Sahara'
+	AND admin0_grid_id NOT IN (100314737,100083318,100041128,100133112,100341242,100132648,100222839,100379914,100055707,100379993,100130389,100255271,100363975,100248845,100001527,100342458,100024289,100132795,100054605,100253456,100342975,100074571)
+;
+
+
+DELETE FROM dt_location_grid
+WHERE level > 1
+	#'China', 'India', 'France', 'Spain', 'Pakistan', 'Bangladesh'
+	AND admin0_grid_id NOT IN (100050711,100219347,100074576,100259978,100018514) 
+	#'Romania', 'Estonia', 'Bhutan', 'Croatia', 'Solomon Islands', 'Guyana', 'Iceland', 'Vanuatu', 'Cape Verde', 'Samoa', 'Faroe Islands', 'Norway', 'Uruguay', 'Mongolia', 'United Arab Emirates', 'Slovenia', 'Bulgaria', 'Honduras', 'Columbia', 'Namibia', 'Switzerland', 'Western Sahara'
+	AND admin0_grid_id IN (100314737,100083318,100041128,100133112,100341242,100132648,100222839,100379914,100055707,100379993,100130389,100255271,100363975,100248845,100001527,100342458,100024289,100132795,100054605,100253456,100342975,100074571)
+;
+
+SELECT count(*) FROM dt_location_grid;
 ```

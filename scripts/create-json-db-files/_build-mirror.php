@@ -16,8 +16,8 @@ print 'BEGIN' . PHP_EOL;
 print '***************************************************************************************************' . PHP_EOL;
 print 'BUILD DIRECTORIES' . PHP_EOL;
 $output = [
-    'output' => '/Users/chris/Documents/Projects/location-grid-render/json_db/',
-    'children' => '/Users/chris/Documents/Projects/location-grid-render/json_db/children/',
+    'output' => '/Users/chris/Documents/LOCATION-GRID-MIRROR/v2.transition/location-grid-mirror-v2/json_db/',
+    'children' => '/Users/chris/Documents/LOCATION-GRID-MIRROR/v2.transition/location-grid-mirror-v2/json_db/children/',
 ];
 foreach ( $output as $dirname ) {
     if ( ! is_dir( $dirname ) ) {

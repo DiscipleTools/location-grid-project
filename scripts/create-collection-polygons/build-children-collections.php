@@ -31,7 +31,7 @@ if ( isset( $argv[2] ) ) {
     $layer = 'admin0_grid_id';
 }
 
-if ( 1 === $code ) { // if building for the entire world.
+if ( 1 == $code ) { // if building for the entire world.
     $list_raw = mysqli_query( $con,
         "SELECT DISTINCT lg.parent_id
                 FROM location_grid lg
@@ -76,16 +76,8 @@ foreach( $list as $parent_id ) {
             "type" => "Feature",
             'id' => $result['grid_id'],
             "properties" => array(
-                'name' => $result['name'],
-                'id' => $result['grid_id'],
+                'full_name' => _full_name($result),
                 "grid_id" => $result['grid_id'],
-                'country_code' => $result['country_code'],
-                "admin0_code" => $result['admin0_code'],
-                "level" => $result['level_name'],
-                "parent_id" => $result['parent_id'],
-                'center_lat' => $result['latitude'],
-                'center_lng' => $result['longitude'],
-                'FID' => $result['grid_id'],
             ),
             "geometry" => json_decode( $geometry, true ),
         );

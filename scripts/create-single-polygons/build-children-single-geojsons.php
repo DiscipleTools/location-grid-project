@@ -39,6 +39,10 @@ $list_raw = mysqli_query( $con,
                     WHERE lg.{$layer} = '{$code}'
                     " );
 
+//$list_raw = mysqli_query( $con,
+//    "SELECT grid_id FROM quality_check
+//                    " );
+
 if ( empty( $list_raw ) ) {
     print_r( $con );
     die();
@@ -87,16 +91,8 @@ foreach( $list as $row ) {
                 "type" => "Feature",
                 'id' => $result['grid_id'],
                 "properties" => array(
-                    'name' => $result['name'],
-                    'id' => $result['grid_id'],
+                    'full_name' => _full_name($result),
                     "grid_id" => $result['grid_id'],
-                    'country_code' => $result['country_code'],
-                    "admin0_code" => $result['admin0_code'],
-                    "level" => $result['level_name'],
-                    "parent_id" => $result['parent_id'],
-                    'center_lat' => $result['latitude'],
-                    'center_lng' => $result['longitude'],
-                    'FID' => $result['grid_id'],
                 ),
                 "geometry" => json_decode( $geometry, true ),
             );

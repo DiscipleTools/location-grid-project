@@ -18,7 +18,7 @@ require( 'con.php' );
 
 print date('H:i:s') . ' | Start ' . PHP_EOL;
 
-$output_directory = '/Users/chris/Documents/output/'; // polygons single
+$output_directory =  getcwd() . '/output/'; // polygons single
 if( ! is_dir( $output_directory ) ) {
     mkdir( $output_directory, 0755, true);
 }
@@ -99,15 +99,15 @@ foreach( $scan as $file ) {
     }
 }
 
-print date('H:i:s') . ' | Remove Large ' . PHP_EOL;
-// scan new dir
-$current_files = [];
-$scan = scandir( $simplified_directory );
-foreach( $scan as $file ) {
-    if ( preg_match( '/.geojson/', $file ) ) {
-        shell_exec("find $simplified_directory -name '*.geojson' -type 'f' -size +".$kb_max."k -delete");
-    }
-}
+//print date('H:i:s') . ' | Remove Large ' . PHP_EOL;
+//// scan new dir
+//$current_files = [];
+//$scan = scandir( $simplified_directory );
+//foreach( $scan as $file ) {
+//    if ( preg_match( '/.geojson/', $file ) ) {
+//        shell_exec("find $simplified_directory -name '*.geojson' -type 'f' -size +".$kb_max."k -delete");
+//    }
+//}
 
 print date('H:i:s') . ' | End ' . PHP_EOL;
 
