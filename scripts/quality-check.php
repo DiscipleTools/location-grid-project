@@ -169,7 +169,7 @@ else if ( 'collection' === $argv[1] ){
         die();
     }
     $query = mysqli_fetch_all( $query_raw, MYSQLI_ASSOC );
-    $list = array_map(function ( $a ) { return $a['grid_id'];}, $query );
+    $list = array_map(function ( $a ) { return $a['parent_id'];}, $query );
 
     $target_dir = $check_directory_root  . 'collection/';
     if ( ! is_dir( $target_dir ) ){
@@ -188,9 +188,11 @@ else if ( 'collection' === $argv[1] ){
     $i = 0;
     $s = 0;
     foreach( $list as $grid_id ) {
+
         if ( ! isset( $files[$grid_id] ) ) {
             print $grid_id . ' - missing '. PHP_EOL;
             $i++;
+            mysqli_query( $con, "INSERT INTO quality_check (grid_id) VALUES ($grid_id)");
         }
         else if ( filesize($target_dir . $files[$grid_id]) < 50 ) {
             print $grid_id . ' - too small '. PHP_EOL;
@@ -198,6 +200,54 @@ else if ( 'collection' === $argv[1] ){
         }
     }
 
+    print 'Files Missing : ' . $i . PHP_EOL;
+    print 'Files Too Small: ' . $s . PHP_EOL;
+
+}
+else if ( 'nullcheck' === $argv[1] ) {
+    if ( ! isset( $argv[2] ) ) {
+        print 'Second argument not placed.' . PHP_EOL;
+    }
+    switch($argv[2] ) {
+        case 'collection':
+            $target_dir = $check_directory_root  . 'collection/';
+            break;
+        case 'low':
+            $target_dir = $check_directory_root  . 'low/';
+            break;
+        case 'high':
+            $target_dir = $check_directory_root  . 'high/';
+            break;
+    }
+
+    if ( ! is_dir( $target_dir ) ){
+        print 'Could not find directory' . PHP_EOL;
+        die();
+    }
+    $scan = scandir( $target_dir );
+    $files = [];
+    $i = 0;
+    foreach( $scan as $file ) {
+        if ( preg_match( '/.geojson/', $file ) ) {
+            print $file;
+            $geojson = json_decode( file_get_contents($target_dir . $file), true );
+            foreach( $geojson['features'] as $index => $feature ) {
+                if ( is_null( $feature['geometry'] ) ) {
+                    $i++;
+                    print $file . ': ' . $index. PHP_EOL;
+                    die();
+                }
+                else {
+                    print '.';
+                }
+
+            }
+            print PHP_EOL;
+            $geojson = null;
+        }
+    }
+
+    print 'Nulls found : ' . $i . PHP_EOL;
 }
 else {
     print 'No quality test found for parameter.' . PHP_EOL;

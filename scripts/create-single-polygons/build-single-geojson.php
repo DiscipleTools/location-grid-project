@@ -62,16 +62,8 @@ foreach( $query as $item ){
             "type" => "Feature",
             'id' => $result['grid_id'],
             "properties" => array(
-                'name' => $result['name'],
-                'id' => $result['grid_id'],
+                'full_name' => _full_name( $result ),
                 "grid_id" => $result['grid_id'],
-                'country_code' => $result['country_code'],
-                "admin0_code" => $result['admin0_code'],
-                "level" => $result['level_name'],
-                "parent_id" => $result['parent_id'],
-                'center_lat' => $result['latitude'],
-                'center_lng' => $result['longitude'],
-                'FID' => $result['grid_id'],
             ),
             "geometry" => json_decode( $geometry, true ),
         );
