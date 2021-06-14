@@ -26,14 +26,14 @@ $query_raw = mysqli_query( $con,
     "
     SELECT grid_id
     FROM (
-    SELECT  lg0.grid_id, a0.name, lg0.longitude, lg0.latitude
-        FROM location_grid lg0
-    LEFT JOIN location_grid as a0 ON lg0.admin0_grid_id=a0.grid_id
-        WHERE lg0.level < 1
-        AND lg0.country_code NOT IN (
-            SELECT lg23.country_code FROM location_grid lg23 WHERE lg23.level_name = 'admin1' GROUP BY lg23.country_code
-        )
-    AND a0.name NOT IN ('China', 'India', 'France', 'Spain', 'Pakistan', 'Bangladesh')
+        SELECT  lg0.grid_id, a0.name, lg0.longitude, lg0.latitude
+            FROM location_grid lg0
+        LEFT JOIN location_grid as a0 ON lg0.admin0_grid_id=a0.grid_id
+            WHERE lg0.level < 1
+            AND lg0.country_code NOT IN (
+                SELECT lg23.country_code FROM location_grid lg23 WHERE lg23.level_name = 'admin1' GROUP BY lg23.country_code
+            )
+        AND a0.name NOT IN ('China', 'India', 'France', 'Spain', 'Pakistan', 'Bangladesh')
         AND a0.name NOT IN ('Romania', 'Estonia', 'Bhutan', 'Croatia', 'Solomon Islands', 'Guyana', 'Iceland', 'Vanuatu', 'Cape Verde', 'Samoa', 'Faroe Islands', 'Norway', 'Uruguay', 'Mongolia', 'United Arab Emirates', 'Slovenia', 'Bulgaria', 'Honduras', 'Columbia', 'Namibia', 'Switzerland', 'Western Sahara')
     
         
