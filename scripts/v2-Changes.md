@@ -12,3 +12,4 @@
 1. Rebuild political divisions of Morocco
 1. Rebuild political divisions of Southern Baja California
 1. Added populations through many different techniques to the top 50k
+1. Added column population_date to track population census information
