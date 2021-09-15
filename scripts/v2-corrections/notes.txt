@@ -1,0 +1,4 @@
+1. Correct the world properties to match new string only style.
+2. Add back the name field parameter
+3. Update all the full_name strings to include all nested depth, do not truncate.
+4. Make sure all level 1 and level 2 countries have a combined map
