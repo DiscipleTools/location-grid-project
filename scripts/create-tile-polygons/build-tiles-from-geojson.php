@@ -3,14 +3,18 @@ ini_set('memory_limit', '500000000M');
 /**
  * Build geojson tiles
  */
+
+// argv[1] = file name
+// argv[2] = block size (int)
+
 //include_once( '../vendor/phayes/geophp/geoPHP.inc' ); // make sure to run $ composer install on the command line
-$world_geojson = json_decode( file_get_contents('./output/simplified_output/world.geojson'), true );
+$world_geojson = json_decode( file_get_contents('./output/simplified_output/'. $argv[1]), true );
 
 if ( empty( $world_geojson ) ){
     die();
 }
 
-$tile_block = 1000;
+$tile_block = $argv[2];
 if ( isset( $argv[1] ) ) {
     $tile_block = $argv[1];
 }

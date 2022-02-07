@@ -26,6 +26,7 @@ $default = mysqli_fetch_array( $query_raw, MYSQLI_ASSOC );
 $total = 0;
 $json = [];
 $features = [];
+$point_features = [];
 
 foreach( $colorado['features'] as $result ) {
     // create name
@@ -99,6 +100,16 @@ foreach( $colorado['features'] as $result ) {
         'geometry' => $result['geometry'],
     );
 
+    $point_features[] = [
+        'type' => 'Feature',
+        'id' => $total,
+        'properties' => $properties,
+        'geometry' => [
+            'type' => 'Point',
+            "coordinates" => [$lng, $lat]
+        ],
+    ];
+
 }
 
 // build full collection geojson
@@ -106,8 +117,13 @@ $geojson = array(
     'type' => 'FeatureCollection',
     'features' => $features,
 );
+$point_geojson = array(
+    'type' => 'FeatureCollection',
+    'features' => $point_features,
+);
 
 file_put_contents( './output/' . $parent_id .  '.geojson', json_encode( $geojson ) );
+file_put_contents( './output/' . $parent_id .  '_points.geojson', json_encode( $point_geojson ) );
 file_put_contents( './output/_list.json', json_encode( $json ) );
 
 print 'TOTAL: ' . $total . PHP_EOL;
