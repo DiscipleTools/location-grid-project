@@ -964,13 +964,13 @@ if ( ! class_exists( 'Location_Grid_Geocoder' ) ) {
                     $label = $admin2_name . ', ' . $admin1_name . ', ' . $admin0_name;
                 }
                 if ( $admin3_name ) {
-                    $label = $admin3_name . ', ' . $admin1_name . ', ' . $admin0_name;
+                    $label = $admin3_name . ', ' . $admin2_name . ', '  . $admin1_name . ', ' . $admin0_name;
                 }
                 if ( $admin4_name ) {
-                    $label = $admin4_name . ', ' . $admin1_name . ', ' . $admin0_name;
+                    $label = $admin4_name . ', ' . $admin3_name . ', ' . $admin2_name . ', '  . $admin1_name . ', ' . $admin0_name;
                 }
                 if ( $admin5_name ) {
-                    $label = $admin5_name . ', ' . $admin1_name . ', ' . $admin0_name;
+                    $label = $admin5_name . ', ' . $admin4_name . ', ' . $admin3_name . ', ' . $admin2_name . ', '  . $admin1_name . ', ' . $admin0_name;
                 }
             }
 
