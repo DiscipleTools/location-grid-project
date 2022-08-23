@@ -20,8 +20,8 @@ class Location_Grid_Geocoder {
      * Set Database and polygon source files
      ***************************************************************************************************/
     public $grid_table = 'location_grid';
-    public $mirror_source = '/Users/chris/Documents/Projects/location-grid-mirror/v1/location-grid-mirror/';
-    public $geometry_folder = '/Users/chris/Documents/Projects/location-grid-mirror/v1/location-grid-mirror/high/';
+    public $mirror_source = '/Users/chris/Documents/Projects/location-grid-mirror/v2/location-grid-mirror/';
+    public $geometry_folder = '/Users/chris/Documents/Projects/location-grid-mirror/v2/location-grid-mirror/high/';
     /****************************************************************************************************
      * End settings
      ****************************************************************************************************/

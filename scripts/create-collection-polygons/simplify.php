@@ -41,7 +41,7 @@ foreach( $scan as $file ) {
 
 foreach( $files as $file ) {
     if ( array_search( $file, $current_files ) === false ) {
-        shell_exec('mapshaper '. $target_directory . $file .' -simplify dp keep-shapes '.$argv[1].'% -o '.$new_directory . $file.' -clean allow-empty');
+        shell_exec('mapshaper '. $target_directory . $file .' -simplify dp keep-shapes '.$argv[1].'% -o '.$new_directory . $file.' -clean');
         print date('H:i:s') . ' | ' . $file . PHP_EOL;
     }
 }

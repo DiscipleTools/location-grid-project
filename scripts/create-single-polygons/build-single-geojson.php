@@ -2,7 +2,7 @@
 require_once( 'con.php' );
 
 print 'BEGIN' . PHP_EOL;
-include_once( '../vendor/phayes/geophp/geoPHP.inc' ); // make sure to run $ composer install on the command line
+//include_once( '../vendor/phayes/geophp/geoPHP.inc' ); // make sure to run $ composer install on the command line
 
 /** FOLDERS */
 $output = [
@@ -53,38 +53,32 @@ $query = mysqli_fetch_all( $query_raw, MYSQLI_ASSOC );
 foreach( $query as $item ){
     /* Feature collection */
     $features = [];
-    foreach( $query as $result ) {
+    $grid_id = $item['grid_id'];
+    $geometry = $item['geoJSON'];
 
-        $grid_id = $result['grid_id'];
-        $geometry = $result['geoJSON'];
-
-        $features[] = array(
-            "type" => "Feature",
-            'id' => $result['grid_id'],
-            "properties" => array(
-                'full_name' => _full_name( $result ),
-                "grid_id" => $result['grid_id'],
-            ),
-            "geometry" => json_decode( $geometry, true ),
-        );
-        print $result['grid_id'] . PHP_EOL;
-    }
+    $features[] = array(
+        "type" => "Feature",
+        'id' => $item['grid_id'],
+        "properties" => array(
+            'full_name' => _full_name( $item ),
+            "grid_id" => $item['grid_id'],
+        ),
+        "geometry" => json_decode( $geometry, true ),
+    );
+    print $item['grid_id'] . PHP_EOL;
 
     $geojson = array(
         'type' => "FeatureCollection",
         'features' => $features,
     );
+
+//    print_r ( $geojson );
+
     $geojson = json_encode( $geojson );
     $geojson = trim(preg_replace('/\n/', '', $geojson));
 
-    $geometry = geoPHP::load( $geojson, 'geojson' );
-    $centroid = $geometry->getCentroid();
-    print_r($centroid);
-
-    $bounds = $geometry->getBBox();
-    print_r($bounds);
-
-    file_put_contents( $output['output'] . $grid_id .  '.geojson', $geojson );
+    print $output['output'] .  $item['grid_id'] .  '.geojson';
+    file_put_contents( $output['output'] .  $item['grid_id'] .  '.geojson', $geojson );
 
 }
 

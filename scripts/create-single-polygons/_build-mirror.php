@@ -19,9 +19,9 @@ print '*************************************************************************
  ********************************************************************************************************************/
 print 'BUILD DIRECTORIES' . PHP_EOL;
 $output = [
-    'output' => '/Users/chris/Documents/Projects/location-grid-render/output-single/',
-    'low' => '/Users/chris/Documents/Projects/location-grid-render/low/',
-    'high' => '/Users/chris/Documents/Projects/location-grid-render/high/',
+    'output' => '/Users/chris/Documents/LOCATION-GRID-MIRROR/v2.transition/output-single/',
+    'low' => '/Users/chris/Documents/LOCATION-GRID-MIRROR/v2.transition/low/',
+    'high' => '/Users/chris/Documents/LOCATION-GRID-MIRROR/v2.transition/high/',
 ];
 foreach ( $output as $dirname ) {
     if ( ! is_dir( $dirname ) ) {

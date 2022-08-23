@@ -69,11 +69,11 @@ foreach( $query as $result ) {
     $features[] = array(
         "type" => "Feature",
         'id' => $result['grid_id'],
+        "geometry" => json_decode( $geometry, true ),
         "properties" => array(
             'full_name' => _full_name( $result ),
             "grid_id" => $result['grid_id'],
         ),
-        "geometry" => json_decode( $geometry, true ),
     );
     print $result['grid_id'] . PHP_EOL;
 }
