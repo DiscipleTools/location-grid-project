@@ -16,7 +16,8 @@ if ( ! isset( $argv[1] ) ) {
    die();
 }
 
-$check_directory_root = '/Users/chris/Documents/LOCATION-GRID-MIRROR/v2.master/location-grid-mirror-v2/';
+$check_directory_root = '/Users/chris/Documents/LOCATION-GRID-MIRROR/v2/location-grid-mirror-v2/';
+//$check_directory_root = '/Users/chris/Desktop/';
 $lg = 'location_grid'; // grid table
 $lgg = 'location_grid_geometry'; // grid geometry table
 
@@ -244,6 +245,44 @@ else if ( 'nullcheck' === $argv[1] ) {
             }
             print PHP_EOL;
             $geojson = null;
+        }
+    }
+
+    print 'Nulls found : ' . $i . PHP_EOL;
+}
+else if ( 'righthand' === $argv[1] ) {
+    require_once('vendor/geojson-rewind-master/src/Rewind.php' );
+
+    if ( ! isset( $argv[2] ) ) {
+        print 'Second argument not placed.' . PHP_EOL;
+    }
+    switch($argv[2] ) {
+        case 'collection':
+            $target_dir = $check_directory_root  . 'collection/';
+            break;
+        case 'low':
+            $target_dir = $check_directory_root  . 'low/';
+            break;
+        case 'high':
+            $target_dir = $check_directory_root  . 'high/';
+            break;
+        case 'm49':
+            $target_dir = $check_directory_root  . 'm49/';
+            break;
+    }
+
+    if ( ! is_dir( $target_dir ) ){
+        print 'Could not find directory' . PHP_EOL;
+        die();
+    }
+    $scan = scandir( $target_dir );
+    $files = [];
+    $i = 0;
+    foreach( $scan as $file ) {
+        if ( preg_match( '/.geojson/', $file ) ) {
+            print $file . PHP_EOL;
+            $geojson =  file_get_contents($target_dir . $file );
+            shell_exec('mapshaper '. $target_dir . $file .' -simplify dp keep-shapes 100% -o force '. $target_dir . $file .' -clean allow-empty');
         }
     }
 

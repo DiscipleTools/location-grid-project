@@ -78,11 +78,36 @@ foreach( $query as $result ) {
     print $result['grid_id'] . PHP_EOL;
 }
 
+
 $geojson = array(
     'type' => "FeatureCollection",
     'features' => $features,
 );
 $geojson = json_encode( $geojson );
+$geojson = trim(preg_replace('/\n/', '', $geojson));
+
+
+
+$geojson_raw = array(
+    'type' => "FeatureCollection",
+    'features' => $features,
+);
+$geojson1 = json_encode( $geojson_raw );
+$geojson1 = trim(preg_replace('/\n/', '', $geojson1 ));
+
+$multipoint = geoPHP::load( $geojson1, 'json' );
+$multipoint_points = $multipoint->getBBox();
+print_r($multipoint_points);
+
+$boundaries = [
+    'north_latitude' => (float) $multipoint_points['maxy'],
+    'south_latitude' => (float) $multipoint_points['miny'],
+    'east_longitude' => (float) $multipoint_points['maxx'],
+    'west_longitude' => (float) $multipoint_points['minx'],
+];
+
+$geojson_raw['boundaries'] = $boundaries;
+$geojson = json_encode( $geojson_raw );
 $geojson = trim(preg_replace('/\n/', '', $geojson));
 
 file_put_contents( $output['output'] . $code . '_' . $level .  '.geojson', $geojson );

@@ -17,9 +17,15 @@ foreach ( $output as $dirname ) {
     }
 }
 
-/* parent id */
 if ( isset( $argv[1] ) ) {
     $code = $argv[1];
+} else {
+    print 'parent_id argument missing' . PHP_EOL;
+    die();
+}
+
+if ( isset( $argv[2] ) ) {
+    $level = $argv[2];
 } else {
     print 'parent_id argument missing' . PHP_EOL;
     die();
@@ -42,7 +48,7 @@ $query_raw = mysqli_query( $con,
                 LEFT JOIN location_grid as a3 ON lg.admin3_grid_id=a3.grid_id
                 LEFT JOIN location_grid as a4 ON lg.admin4_grid_id=a4.grid_id
                 LEFT JOIN location_grid as a5 ON lg.admin5_grid_id=a5.grid_id
-            WHERE lg.parent_id = {$code}" );
+            WHERE lg.admin0_grid_id = {$code} AND lg.level = {$level}" );
 
 if ( empty( $query_raw ) ) {
     print_r( $con );
@@ -61,25 +67,34 @@ foreach( $query as $result ) {
         "type" => "Feature",
         'id' => $result['grid_id'],
         "properties" => array(
-            'name' => $result['name'],
-            'admin0_code' => $result['admin0_code'],
-            'country_code' => $result['country_code'],
-            'center_lat' => (float) $result['latitude'],
-            'center_lng' => (float) $result['longitude'],
             'full_name' => _full_name( $result ),
-            "grid_id" => intval( $result['grid_id'] ),
-            'id' => $result['grid_id'],
+            "grid_id" => $result['grid_id'],
         ),
         "geometry" => json_decode( $geometry, true ),
     );
     print $result['grid_id'] . PHP_EOL;
 }
 
-$geojson = array(
+$geojson_raw = array(
     'type' => "FeatureCollection",
     'features' => $features,
 );
-$geojson = json_encode( $geojson );
+$geojson1 = json_encode( $geojson_raw );
+$geojson1 = trim(preg_replace('/\n/', '', $geojson1 ));
+
+$multipoint = geoPHP::load( $geojson1, 'json' );
+$multipoint_points = $multipoint->getBBox();
+print_r($multipoint_points);
+
+$boundaries = [
+    'north_latitude' => (float) $multipoint_points['maxy'],
+    'south_latitude' => (float) $multipoint_points['miny'],
+    'east_longitude' => (float) $multipoint_points['maxx'],
+    'west_longitude' => (float) $multipoint_points['minx'],
+];
+
+$geojson_raw['boundaries'] = $boundaries;
+$geojson = json_encode( $geojson_raw );
 $geojson = trim(preg_replace('/\n/', '', $geojson));
 
 file_put_contents( $output['output'] . $code .  '.geojson', $geojson );
