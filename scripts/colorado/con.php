@@ -45,6 +45,9 @@ function _full_name( $row ) {
     if ( ! empty( $row['admin2_name'] ) ) {
         $label = $row['admin2_name'] . ', ' . $row['admin1_name']  . ', ' . $row['admin0_name'];
     }
+    if ( ! empty( $row['admin3_name'] ) ) {
+        $label = $row['admin3_name'] . ', ' . $row['admin1_name']  . ', ' . $row['admin0_name'];
+    }
 
     return $label;
 }

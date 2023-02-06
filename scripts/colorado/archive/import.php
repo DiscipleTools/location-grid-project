@@ -11,7 +11,7 @@ print 'START' . PHP_EOL;
 include_once( '/Users/chris/Documents/PROJECTS/localhost/wp-content/plugins/location-grid-project/scripts/vendor/phayes/geophp/geoPHP.inc'); // make sure to run $ composer install on the command line
 
 // import source geojson
-$colorado = json_decode( file_get_contents('statistical_neighborhoods.geojson' ), true );
+$colorado = json_decode( file_get_contents('Colorado_Census_Tract_Boundaries.geojson' ), true );
 
 // identify parent grid id
 $parent_id = 100364508;

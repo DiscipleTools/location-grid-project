@@ -20,8 +20,8 @@ class Location_Grid_Geocoder {
      * Set Database and polygon source files
      ***************************************************************************************************/
     public $grid_table = 'location_grid';
-    public $mirror_source = '/Users/chris/Documents/Projects/location-grid-mirror/v2/location-grid-mirror/';
-    public $geometry_folder = '/Users/chris/Documents/Projects/location-grid-mirror/v2/location-grid-mirror/high/';
+    public $mirror_source = '/Users/chris/Documents/LOCATION-GRID-MIRROR/v2/location-grid-mirror-v2';
+    public $geometry_folder = '/Users/chris/Documents/LOCATION-GRID-MIRROR/v2/location-grid-mirror-v2/high/';
     /****************************************************************************************************
      * End settings
      ****************************************************************************************************/
@@ -47,6 +47,7 @@ class Location_Grid_Geocoder {
      * @return array|bool|null
      */
     public function get_grid_id_by_lnglat( $longitude, $latitude, $country_code = null, $level = null ) {
+//        print __METHOD__.PHP_EOL;
 
         $longitude = (float) $longitude;
         $latitude  = (float) $latitude;
@@ -90,7 +91,6 @@ class Location_Grid_Geocoder {
         /** Test 2: Point in Polygon test to find exact match */
         $test2 = $this->lnglat_test2( $results, $longitude, $latitude );
         if ( $test2 ) {
-//            print 'test2'.PHP_EOL;
             return $test2;
         }
 
@@ -643,6 +643,7 @@ class Location_Grid_Geocoder {
     }
 
     public function query_level_by_lnglat( float $longitude, float $latitude, int $level ): array {
+//        print __METHOD__.PHP_EOL;
         $con = $this->con;
 
         $result = mysqli_query( $con, "
