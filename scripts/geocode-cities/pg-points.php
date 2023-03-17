@@ -25,7 +25,7 @@ if (!$script_con) {
 /**********************************************************************************************************************
  * End $script_con var
  **********************************************************************************************************************/
-
+include_once( '/Users/chris/Documents/PROJECTS/localhost/wp-content/plugins/location-grid-project/scripts/vendor/phayes/geophp/geoPHP.inc');
 /**********************************************************************************************************************
  * Load Geocoder
  **********************************************************************************************************************/
@@ -46,29 +46,64 @@ $geocoder = new Location_Grid_Geocoder();
  *
  **********************************************************************************************************************/
 
-$table = 'location_grid_people_groups';
+$table_lg = 'location_grid';
+$table_lgg = 'location_grid_geometry';
+$table_pg = 'location_grid_people_groups';
+$geometry_folder = '/Users/chris/Documents/LOCATION-GRID-MIRROR/v2/location-grid-mirror-v2/high/';
 
-$results = mysqli_query( $script_con, "SELECT * FROM {$table} WHERE grid_id_4770 IS NULL");
+$results = mysqli_query( $script_con, "SELECT * FROM {$table_pg}");
 $query = mysqli_fetch_all( $results, MYSQLI_ASSOC );
 
 if ( empty( $query ) ){
     print 'No Results '. PHP_EOL;
     return;
 }
-print_r($query);
-foreach ($query as $index => $row ) {
 
-    $grid_row = $geocoder->get_grid_id_by_lnglat( $row['longitude'], $row['latitude'] );
-    if ( empty( $grid_row ) ) {
-        print 'Not found ' . $row['id'] . PHP_EOL;
+$temp_features = [];
+foreach ($query as $index => $row ) {
+    if ( 'N' == $row['LeastReached'] ) {
         continue;
     }
-    mysqli_query( $script_con, "UPDATE {$table} SET `grid_id_4770` = '{$grid_row['grid_id']}' WHERE `id` = {$row['id']};");
+    $temp_features[] = array(
+        'type' => 'Feature',
+        'properties' => $row,
+        'geometry' => [
+            "type" => "Point",
+            "coordinates" => [
+                (float) $row['longitude'],
+                (float) $row['latitude'],
+            ]
+        ]
+    );
 
-    print $row['name']. PHP_EOL;
-
+//    print $row['id'] . PHP_EOL;
 }
+
+$temp_geojson = array(
+    'type' => 'FeatureCollection',
+    'features' => $temp_features,
+);
+$temp_geojson = json_encode( $temp_geojson );
+file_put_contents( 'people-groups-least.geojson', $temp_geojson );
+
+
+
+//try {
+//    $polygon = geoPHP::load( $temp_geojson , 'json');
+//} catch ( Exception $e ) {
+//    print date('H:i:s') . ' | Fail ' . '(' . $row['grid_id'] . ')' . PHP_EOL;
+//}
+//
+//$polygon->out('json');
 
 print 'End'. PHP_EOL;
 
 mysqli_close($script_con);
+
+
+//    $grid_row = $geocoder->get_grid_id_by_lnglat( $row['longitude'], $row['latitude'] );
+//    if ( empty( $grid_row ) ) {
+//        print 'Not found ' . $row['id'] . PHP_EOL;
+//        continue;
+//    }
+//    mysqli_query( $script_con, "UPDATE {$table} SET `grid_id_4770` = '{$grid_row['grid_id']}' WHERE `id` = {$row['id']};");
