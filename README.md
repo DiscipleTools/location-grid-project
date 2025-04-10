@@ -50,7 +50,7 @@ The location grid table is a MYSQL table with 380,000 records for the administra
 on the GADM polygon set. This table adds hierarchy, geonames cross-reference, bounding boxes, longitude and latitude for centerpoint,
 country_codes, and level descriptions.
 
-[Download Location Grid SQL Table](https://storage.googleapis.com/location-grid-source-data-v2/location_grid.sql.zip)
+[Download Location Grid SQL Table](https://storage.googleapis.com/location-grid-source-data-v2/zips/location_grid.sql.zip)
 (15.8 MB)
 
 
@@ -58,7 +58,7 @@ country_codes, and level descriptions.
 The location_grid_geometry table has all polygons for each of the 380,000 administrative units cross-referenced
 to the location_grid table by grid_id.
 
-[Download Location_Grid_Geometry](https://storage.googleapis.com/location-grid-source-data-v2/location_grid_geometry.sql.zip)
+[Download Location_Grid_Geometry](https://storage.googleapis.com/location-grid-source-data-v2/zips/location_grid_geometry.sql.zip)
 (1.94 GB)
  
  
@@ -66,28 +66,28 @@ to the location_grid table by grid_id.
 The location grid facts table is a sql table that can be joined to the location grid and contains faith, language, and religion 
 breakdown information. 
 
-[Download Location Grid Facts](https://storage.googleapis.com/location-grid-source-data-v2/location_grid_facts.sql.zip)
+[Download Location Grid Facts](https://storage.googleapis.com/location-grid-source-data-v2/zips/location_grid_facts.sql.zip)
 (1.3 MB)
 
  
 ### The location-grid-names
 The location grid names table is offers a table with the location names translated into numerous top languages.  
 
-[Download Location Grid Facts](https://storage.googleapis.com/location-grid-source-data-v2/location_grid_names.sql.zip)
+[Download Location Grid Facts](https://storage.googleapis.com/location-grid-source-data-v2/zips/location_grid_names.sql.zip)
 (27.1 MB)
 
  
 ### The location-grid-cities
 The location grid cities table is offers a cross referenced and location grid geocoded list of cities derived from the Geonames dataset.  
 
-[Download Location Grid Facts](https://storage.googleapis.com/location-grid-source-data-v2/location_grid_cities.sql.zip)
+[Download Location Grid Facts](https://storage.googleapis.com/location-grid-source-data-v2/zips/location_grid_cities.sql.zip)
 (6.2 MB)
  
  
 ### The location-grid-people-groups
 The location grid people groups table is offers a cross referenced and location grid geocoded list of people groups provided by the Joshua Project database.  
 
-[Download Location Grid Facts](https://storage.googleapis.com/location-grid-source-data-v2/location_grid_people_groups.sql.zip)
+[Download Location Grid Facts](https://storage.googleapis.com/location-grid-source-data-v2/zips/location_grid_people_groups.sql.zip)
 (1 MB)
  
  
